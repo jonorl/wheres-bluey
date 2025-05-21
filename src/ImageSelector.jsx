@@ -7,29 +7,41 @@ import bobBilbyImage from "./assets/bluey-room-bob-bilby.jpg";
 const characters = [
   {
     name: 'Socks',
-    xRange: [65, 69], // 28%–32% of width
-    yRange: [40, 51], // 38%–42% of height
+    xRange: [65, 69],
+    yRange: [40, 51],
+  },
+  {
+    name: 'Muffin',
+    xRange: [35, 41],
+    yRange: [74, 81],
+  },
+  {
+    name: 'Bob Bilby',
+    xRange: [36, 39],
+    yRange: [12, 17],
   },
 ];
 
 function ImageSelector({ imageUrl }) {
-  const [clickedCoords, setClickedCoords] = useState(null); // { x: number, y: number }
+  const [clickedCoords, setClickedCoords] = useState(null); // { x: number, y: number, imageWidth: number, imageHeight: number }
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const imageRef = useRef(null);
+  // REMOVED: const rect = useRef(imageUrl.current.getBoundingClientRect())
+
 
   const handleImageClick = (e) => {
     if (!imageRef.current) return; // Guard against unmounted ref
 
     // Get image's bounding rectangle
-    const rect = imageRef.current.getBoundingClientRect();
+    const rect = imageRef.current.getBoundingClientRect(); // This is correct!
 
     // Get click coordinates relative to the image
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
     // Get image dimensions
-    const { width, height } = rect;
+    const { width, height } = rect; // Destructure width and height here
 
     // Convert to percentages for character detection
     const clickXPercent = (clickX / width) * 100;
@@ -51,10 +63,40 @@ function ImageSelector({ imageUrl }) {
       }
     });
 
-    // Store image-relative coordinates for dropdown positioning
-    setClickedCoords({ x: clickX, y: clickY });
+    // Store image-relative coordinates AND image dimensions for dropdown positioning and later calculations
+    setClickedCoords({ x: clickX, y: clickY, imageWidth: width, imageHeight: height });
     setShowDropdown(true);
   };
+
+  // Pass imageWidth and imageHeight from clickedCoords
+  function handleCharacterChoice(char, clickX, clickY) {
+    // Ensure clickedCoords is available, and get the image dimensions from it
+    if (!clickedCoords) return;
+    const { imageWidth, imageHeight } = clickedCoords;
+
+    const charName = characters.find(character => character.name === char); // Use find if you expect a single match
+    if (!charName) return; // Guard against character not found
+
+    const clickXPercent = (clickX / imageWidth) * 100; // Use imageWidth here
+    const clickYPercent = (clickY / imageHeight) * 100; // Use imageHeight here
+
+    console.log("charName", charName);
+    console.log("charName.xRange", charName.xRange); // Corrected: access directly, not charName[0]
+    console.log("clickXPercent", clickXPercent);
+
+    if (
+      clickXPercent >= charName.xRange[0] &&
+      clickXPercent <= charName.xRange[1] &&
+      clickYPercent >= charName.yRange[0] &&
+      clickYPercent <= charName.yRange[1]
+    ) {
+      console.log(`Found ${char}!!!!!!!!!`);
+      // You might want to do something here, like close the dropdown or mark the character as found
+      setShowDropdown(false); // Close dropdown after a choice is made
+    } else {
+      console.log(`Clicked outside ${char}'s range.`);
+    }
+  }
 
   // Handle right-click (contextmenu event)
   const handleContextMenu = (e) => {
@@ -106,15 +148,15 @@ function ImageSelector({ imageUrl }) {
         >
           <ul>
             <li>
-              <img src={socksImage} alt="Socks" />
+              <img src={socksImage} alt="Socks" onClick={() => handleCharacterChoice("Socks", clickedCoords.x, clickedCoords.y)} />
               Socks
             </li>
             <li>
-              <img src={muffinImage} alt="Muffin" />
+              <img src={muffinImage} alt="Muffin" onClick={() => handleCharacterChoice("Muffin", clickedCoords.x, clickedCoords.y)} />
               Muffin
             </li>
             <li>
-              <img src={bobBilbyImage} alt="Bob Bilby" />
+              <img src={bobBilbyImage} alt="Bob Bilby" onClick={() => handleCharacterChoice("Bob Bilby", clickedCoords.x, clickedCoords.y)} />
               Bob Bilby
             </li>
           </ul>
