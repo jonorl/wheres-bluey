@@ -1,6 +1,16 @@
-// src/ImageClickDropdown.js
 import React, { useState, useRef, useEffect } from 'react';
-import './imageSelector.css'
+import './imageSelector.css';
+import socksImage from "./assets/bluey-room-socks.jpg";
+import muffinImage from "./assets/bluey-room-muffin.jpg";
+import bobBilbyImage from "./assets/bluey-room-bob-bilby.jpg";
+
+const characters = [
+  {
+    name: 'Socks',
+    xRange: [65, 69], // 28%–32% of width
+    yRange: [40, 51], // 38%–42% of height
+  },
+];
 
 function ImageSelector({ imageUrl }) {
   const [clickedCoords, setClickedCoords] = useState(null); // { x: number, y: number }
@@ -9,30 +19,58 @@ function ImageSelector({ imageUrl }) {
   const imageRef = useRef(null);
 
   const handleImageClick = (e) => {
-    // Get the image's position and dimensions
-    const imageRect = imageRef.current.getBoundingClientRect();
+    if (!imageRef.current) return; // Guard against unmounted ref
 
-    // Calculate click coordinates relative to the image
-    const x = e.clientX - imageRect.left;
-    const y = e.clientY - imageRect.top;
+    // Get image's bounding rectangle
+    const rect = imageRef.current.getBoundingClientRect();
 
-    setClickedCoords({ x, y });
+    // Get click coordinates relative to the image
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    // Get image dimensions
+    const { width, height } = rect;
+
+    // Convert to percentages for character detection
+    const clickXPercent = (clickX / width) * 100;
+    const clickYPercent = (clickY / height) * 100;
+
+    // Log coordinates for debugging
+    console.log(`Clicked at: X = ${clickX}, Y = ${clickY}`);
+    console.log(`Percentage: X = ${clickXPercent}%, Y = ${clickYPercent}%`);
+
+    // Check if click hits a character
+    characters.forEach((character) => {
+      if (
+        clickXPercent >= character.xRange[0] &&
+        clickXPercent <= character.xRange[1] &&
+        clickYPercent >= character.yRange[0] &&
+        clickYPercent <= character.yRange[1]
+      ) {
+        console.log(`Found ${character.name}!`);
+      }
+    });
+
+    // Store image-relative coordinates for dropdown positioning
+    setClickedCoords({ x: clickX, y: clickY });
     setShowDropdown(true);
-
-    // Print coordinates to console
-    console.log(`Clicked at: X = ${x}, Y = ${y}`);
   };
 
-  // This handles right-click (contextmenu event)
+  // Handle right-click (contextmenu event)
   const handleContextMenu = (e) => {
-    e.preventDefault(); // Prevent the browser's default context menu
-    handleImageClick(e); // Use the same logic for getting coordinates and showing dropdown
+    e.preventDefault(); // Prevent default context menu
+    handleImageClick(e); // Reuse click handler
   };
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && imageRef.current && !imageRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        imageRef.current &&
+        !imageRef.current.contains(event.target)
+      ) {
         setShowDropdown(false);
       }
     };
@@ -44,14 +82,15 @@ function ImageSelector({ imageUrl }) {
   }, []);
 
   return (
-    <div className="image-container">
+    <div className="image-container" style={{ position: 'relative' }}>
       <img
+        className='Main'
         ref={imageRef}
         src={imageUrl}
         alt="Clickable"
         onClick={handleImageClick}
-        onContextMenu={handleContextMenu} // For right-click
-        style={{ cursor: 'crosshair' }}
+        onContextMenu={handleContextMenu}
+        style={{ cursor: 'crosshair', maxWidth: '100%', height: 'auto' }}
       />
 
       {showDropdown && clickedCoords && (
@@ -62,14 +101,22 @@ function ImageSelector({ imageUrl }) {
             position: 'absolute',
             left: clickedCoords.x,
             top: clickedCoords.y,
-            // Adjust positioning to ensure it's not off-screen
-            transform: 'translate(-50%, -50%)', // Centers the dropdown on the click
+            transform: 'translate(25%, -50%)', // Center dropdown on click
           }}
         >
           <ul>
-            <li>Option 1 (X: {clickedCoords.x}, Y: {clickedCoords.y})</li>
-            <li>Option 2</li>
-            <li>Option 3</li>
+            <li>
+              <img src={socksImage} alt="Socks" />
+              Socks
+            </li>
+            <li>
+              <img src={muffinImage} alt="Muffin" />
+              Muffin
+            </li>
+            <li>
+              <img src={bobBilbyImage} alt="Bob Bilby" />
+              Bob Bilby
+            </li>
           </ul>
         </div>
       )}

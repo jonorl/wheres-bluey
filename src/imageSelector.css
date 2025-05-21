@@ -21,10 +21,17 @@
 
 .dropdown-menu li {
   padding: 8px 15px;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
   white-space: nowrap;
 }
 
 .dropdown-menu li:hover {
   background-color: #f0f0f0;
+}
+
+.main {
+  max-width: 100%;
+  height: auto; /* Maintains aspect ratio */
 }
