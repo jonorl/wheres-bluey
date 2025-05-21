@@ -22,6 +22,7 @@ function ImageSelector({ imageUrl }) {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [playerName, setPlayerName] = useState('');
+  const [feedback, setFeedback] = useState(null); // { type: 'correct' | 'incorrect', x: number, y: number }
   const dropdownRef = useRef(null);
   const imageRef = useRef(null);
   const timerRef = useRef(null);
@@ -36,13 +37,23 @@ function ImageSelector({ imageUrl }) {
 
   // Handle win condition
   useEffect(() => {
-    console.log(`Current foundCount: ${foundCount}`); // Debug foundCount
+    console.log(`Current foundCount: ${foundCount}`);
     if (foundCount === 3) {
       console.log('You won the game!');
       clearInterval(timerRef.current);
       setShowModal(true);
     }
   }, [foundCount]);
+
+  // Clear feedback after 2 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timeout = setTimeout(() => {
+        setFeedback(null);
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [feedback]);
 
   const handleImageClick = (e) => {
     if (!imageRef.current || showModal) return;
@@ -78,19 +89,22 @@ function ImageSelector({ imageUrl }) {
       clickYPercent >= charName.yRange[0] &&
       clickYPercent <= charName.yRange[1]
     ) {
+      console.log(`Found ${char}! Current foundCount before update: ${foundCount}`);
+      setFeedback({ type: 'correct', x: clickX, y: clickY });
       if (!foundCharacters[char]) {
-        // Update both states in a single render cycle
         setFoundCharacters((prev) => ({
           ...prev,
           [char]: true,
         }));
         setFoundCount((prevCount) => {
           const newCount = prevCount + 1;
+          console.log(`Updating foundCount to: ${newCount}`);
           return newCount;
         });
       }
     } else {
       console.log(`Clicked outside ${char}'s range.`);
+      setFeedback({ type: 'incorrect', x: clickX, y: clickY });
     }
     setShowDropdown(false);
   };
@@ -150,7 +164,19 @@ function ImageSelector({ imageUrl }) {
         onContextMenu={handleContextMenu}
         style={{ cursor: 'crosshair', maxWidth: '100%', height: 'auto' }}
       />
-
+      {feedback && (
+        <span
+          className={`feedback feedback-${feedback.type}`}
+          style={{
+            position: 'absolute',
+            left: feedback.x,
+            top: feedback.y,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          {feedback.type === 'correct' ? '✅' : '🚫'}
+        </span>
+      )}
       {showDropdown && clickedCoords && (
         <div
           ref={dropdownRef}
@@ -190,7 +216,6 @@ function ImageSelector({ imageUrl }) {
           </ul>
         </div>
       )}
-
       {showModal && (
         <div className="modal">
           <div className="modal-content">

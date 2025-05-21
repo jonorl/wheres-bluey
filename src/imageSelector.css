@@ -2,11 +2,9 @@
   position: relative;
   display: inline-block;
 }
-
 .Main {
   display: block;
 }
-
 .dropdown-menu {
   position: absolute;
   background: white;
@@ -14,31 +12,26 @@
   z-index: 1000;
   padding: 5px;
 }
-
 .dropdown-menu ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-
 .dropdown-menu li {
   display: flex;
   align-items: center;
   padding: 5px;
   cursor: pointer;
-  position: rue; /* For checkmark positioning */
+  position: relative;
 }
-
 .dropdown-menu li:hover {
   background-color: #f0f0f0;
 }
-
 .dropdown-menu li img {
-  width: 30px;
+  width: 5vw;
   height: auto;
   margin-right: 5px;
 }
-
 .check-mark {
   position: absolute;
   top: 50%;
@@ -49,7 +42,6 @@
   font-weight: bold;
   z-index: 10;
 }
-
 .timer {
   position: absolute;
   top: 10px;
@@ -61,7 +53,6 @@
   font-size: 16px;
   z-index: 10;
 }
-
 .modal {
   position: fixed;
   top: 0;
@@ -74,7 +65,6 @@
   align-items: center;
   z-index: 1000;
 }
-
 .modal-content {
   background: white;
   padding: 20px;
@@ -83,24 +73,20 @@
   max-width: 400px;
   width: 100%;
 }
-
 .modal-content h2 {
   margin-top: 0;
 }
-
 .modal-content form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
 .modal-content input {
   padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
 .modal-content button {
   padding: 10px;
   background: #28a745;
@@ -110,7 +96,40 @@
   cursor: pointer;
   font-size: 16px;
 }
-
 .modal-content button:hover {
   background: #218838;
+}
+.feedback {
+  position: absolute;
+  font-size: 40px;
+  z-index: 100;
+  animation: fadeInOut 2s ease-in-out forwards;
+  opacity: 0;
+}
+.feedback-correct {
+  color: green;
+}
+.feedback-incorrect {
+  color: red;
+}
+@keyframes fadeInOut {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.8);
+  }
+  20% { 
+    opacity: 1; 
+    transform: scale(1.1);
+  }
+  30% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  80% { 
+    opacity: 1; 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0.9);
+  }
 }
