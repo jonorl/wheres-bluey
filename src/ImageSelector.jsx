@@ -1,88 +1,76 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './imageSelector.css';
-import socksImage from "./assets/bluey-room-socks.jpg";
-import muffinImage from "./assets/bluey-room-muffin.jpg";
-import bobBilbyImage from "./assets/bluey-room-bob-bilby.jpg";
+import socksImage from './assets/bluey-room-socks.jpg';
+import muffinImage from './assets/bluey-room-muffin.jpg';
+import bobBilbyImage from './assets/bluey-room-bob-bilby.jpg';
 
 const characters = [
-  {
-    name: 'Socks',
-    xRange: [65, 69],
-    yRange: [40, 51],
-  },
-  {
-    name: 'Muffin',
-    xRange: [35, 41],
-    yRange: [74, 81],
-  },
-  {
-    name: 'Bob Bilby',
-    xRange: [36, 39],
-    yRange: [12, 17],
-  },
+  { name: 'Socks', xRange: [65, 69], yRange: [40, 51] },
+  { name: 'Muffin', xRange: [35, 41], yRange: [74, 81] },
+  { name: 'Bob Bilby', xRange: [36, 39], yRange: [12, 17] },
 ];
 
 function ImageSelector({ imageUrl }) {
-  const [clickedCoords, setClickedCoords] = useState(null); // { x: number, y: number, imageWidth: number, imageHeight: number }
+  const [clickedCoords, setClickedCoords] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [foundCharacters, setFoundCharacters] = useState({
+    Socks: false,
+    Muffin: false,
+    'Bob Bilby': false,
+  });
+  const [foundCount, setFoundCount] = useState(0);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [playerName, setPlayerName] = useState('');
   const dropdownRef = useRef(null);
   const imageRef = useRef(null);
-  // REMOVED: const rect = useRef(imageUrl.current.getBoundingClientRect())
+  const timerRef = useRef(null);
 
+  // Timer logic
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setTimeElapsed((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  // Handle win condition
+  useEffect(() => {
+    console.log(`Current foundCount: ${foundCount}`); // Debug foundCount
+    if (foundCount === 3) {
+      console.log('You won the game!');
+      clearInterval(timerRef.current);
+      setShowModal(true);
+    }
+  }, [foundCount]);
 
   const handleImageClick = (e) => {
-    if (!imageRef.current) return; // Guard against unmounted ref
+    if (!imageRef.current || showModal) return;
 
-    // Get image's bounding rectangle
-    const rect = imageRef.current.getBoundingClientRect(); // This is correct!
-
-    // Get click coordinates relative to the image
+    const rect = imageRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
+    const { width, height } = rect;
 
-    // Get image dimensions
-    const { width, height } = rect; // Destructure width and height here
-
-    // Convert to percentages for character detection
     const clickXPercent = (clickX / width) * 100;
     const clickYPercent = (clickY / height) * 100;
 
-    // Log coordinates for debugging
     console.log(`Clicked at: X = ${clickX}, Y = ${clickY}`);
     console.log(`Percentage: X = ${clickXPercent}%, Y = ${clickYPercent}%`);
 
-    // Check if click hits a character
-    characters.forEach((character) => {
-      if (
-        clickXPercent >= character.xRange[0] &&
-        clickXPercent <= character.xRange[1] &&
-        clickYPercent >= character.yRange[0] &&
-        clickYPercent <= character.yRange[1]
-      ) {
-        console.log(`Found ${character.name}!`);
-      }
-    });
-
-    // Store image-relative coordinates AND image dimensions for dropdown positioning and later calculations
     setClickedCoords({ x: clickX, y: clickY, imageWidth: width, imageHeight: height });
     setShowDropdown(true);
   };
 
-  // Pass imageWidth and imageHeight from clickedCoords
-  function handleCharacterChoice(char, clickX, clickY) {
-    // Ensure clickedCoords is available, and get the image dimensions from it
+  const handleCharacterChoice = (char, clickX, clickY) => {
     if (!clickedCoords) return;
     const { imageWidth, imageHeight } = clickedCoords;
 
-    const charName = characters.find(character => character.name === char); // Use find if you expect a single match
-    if (!charName) return; // Guard against character not found
+    const charName = characters.find((character) => character.name === char);
+    if (!charName) return;
 
-    const clickXPercent = (clickX / imageWidth) * 100; // Use imageWidth here
-    const clickYPercent = (clickY / imageHeight) * 100; // Use imageHeight here
-
-    console.log("charName", charName);
-    console.log("charName.xRange", charName.xRange); // Corrected: access directly, not charName[0]
-    console.log("clickXPercent", clickXPercent);
+    const clickXPercent = (clickX / imageWidth) * 100;
+    const clickYPercent = (clickY / imageHeight) * 100;
 
     if (
       clickXPercent >= charName.xRange[0] &&
@@ -90,21 +78,40 @@ function ImageSelector({ imageUrl }) {
       clickYPercent >= charName.yRange[0] &&
       clickYPercent <= charName.yRange[1]
     ) {
-      console.log(`Found ${char}!!!!!!!!!`);
-      // You might want to do something here, like close the dropdown or mark the character as found
-      setShowDropdown(false); // Close dropdown after a choice is made
+      if (!foundCharacters[char]) {
+        // Update both states in a single render cycle
+        setFoundCharacters((prev) => ({
+          ...prev,
+          [char]: true,
+        }));
+        setFoundCount((prevCount) => {
+          const newCount = prevCount + 1;
+          return newCount;
+        });
+      }
     } else {
       console.log(`Clicked outside ${char}'s range.`);
     }
-  }
-
-  // Handle right-click (contextmenu event)
-  const handleContextMenu = (e) => {
-    e.preventDefault(); // Prevent default context menu
-    handleImageClick(e); // Reuse click handler
+    setShowDropdown(false);
   };
 
-  // Close dropdown when clicking outside
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    if (showModal) return;
+    handleImageClick(e);
+  };
+
+  const handleNameChange = (e) => {
+    setPlayerName(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(`Submitting name: ${playerName}, Time: ${timeElapsed} seconds`);
+    setShowModal(false);
+    setPlayerName('');
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -123,10 +130,19 @@ function ImageSelector({ imageUrl }) {
     };
   }, []);
 
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="image-container" style={{ position: 'relative' }}>
+      <div className="timer" style={{ position: 'absolute', top: '10px', left: '10px', color: 'white', background: 'rgba(0, 0, 0, 0.7)', padding: '5px 10px', borderRadius: '5px' }}>
+        Time: {formatTime(timeElapsed)}
+      </div>
       <img
-        className='Main'
+        className="Main"
         ref={imageRef}
         src={imageUrl}
         alt="Clickable"
@@ -143,23 +159,57 @@ function ImageSelector({ imageUrl }) {
             position: 'absolute',
             left: clickedCoords.x,
             top: clickedCoords.y,
-            transform: 'translate(25%, -50%)', // Center dropdown on click
+            transform: 'translate(25%, -50%)',
           }}
         >
           <ul>
-            <li>
-              <img src={socksImage} alt="Socks" onClick={() => handleCharacterChoice("Socks", clickedCoords.x, clickedCoords.y)} />
+            <li
+              style={{ position: 'relative', opacity: foundCharacters.Socks ? 0.5 : 1 }}
+              onClick={() => !foundCharacters.Socks && handleCharacterChoice('Socks', clickedCoords.x, clickedCoords.y)}
+            >
+              <img src={socksImage} alt="Socks" />
+              {foundCharacters.Socks && <span className="check-mark">✔</span>}
               Socks
             </li>
-            <li>
-              <img src={muffinImage} alt="Muffin" onClick={() => handleCharacterChoice("Muffin", clickedCoords.x, clickedCoords.y)} />
+            <li
+              style={{ position: 'relative', opacity: foundCharacters.Muffin ? 0.5 : 1 }}
+              onClick={() => !foundCharacters.Muffin && handleCharacterChoice('Muffin', clickedCoords.x, clickedCoords.y)}
+            >
+              <img src={muffinImage} alt="Muffin" />
+              {foundCharacters.Muffin && <span className="check-mark">✔</span>}
               Muffin
             </li>
-            <li>
-              <img src={bobBilbyImage} alt="Bob Bilby" onClick={() => handleCharacterChoice("Bob Bilby", clickedCoords.x, clickedCoords.y)} />
+            <li
+              style={{ position: 'relative', opacity: foundCharacters['Bob Bilby'] ? 0.5 : 1 }}
+              onClick={() => !foundCharacters['Bob Bilby'] && handleCharacterChoice('Bob Bilby', clickedCoords.x, clickedCoords.y)}
+            >
+              <img src={bobBilbyImage} alt="Bob Bilby" />
+              {foundCharacters['Bob Bilby'] && <span className="check-mark">✔</span>}
               Bob Bilby
             </li>
           </ul>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Congratulations!</h2>
+            <p>You found all characters in {formatTime(timeElapsed)}!</p>
+            <form onSubmit={handleSubmit}>
+              <label>
+                Enter your name:
+                <input
+                  type="text"
+                  value={playerName}
+                  onChange={handleNameChange}
+                  placeholder="Your name"
+                  required
+                />
+              </label>
+              <button type="submit">Submit</button>
+            </form>
+          </div>
         </div>
       )}
     </div>
