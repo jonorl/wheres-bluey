@@ -1,35 +1,71 @@
+body {
+  background-color: #88CAF2;
+  position: relative;
+}
+
 .image-container {
   position: relative;
   display: inline-block;
+  border-radius: 20px;
+  /* overflow: hidden;  <--- COMMENT THIS OUT OR CHANGE TO overflow: visible; */
+  box-shadow: 0 8px 16px rgba(0, 120, 210, 0.15);
+  max-width: 100%;
+  max-height: 85vh;
+  text-align: center;
+}
+.image-container img {
+  border-radius: 18px;
+  display: block;
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  /* margin: 0 auto; */
 }
 .Main {
   display: block;
+  max-width: 100%;
+  max-height: 85vh;
+  margin: 0 auto;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0, 100, 200, 0.08);
+  object-fit: contain;
 }
 .dropdown-menu {
   position: absolute;
-  background: white;
-  border: 1px solid #ccc;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #88c0ff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 100, 200, 0.1);
   z-index: 1000;
-  padding: 5px;
+  padding: 12px;
 }
 .dropdown-menu ul {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: left;
 }
 .dropdown-menu li {
   display: flex;
   align-items: center;
+  justify-content: left;
+  width: 10vw;
   padding: 5px;
   cursor: pointer;
   position: relative;
 }
 .dropdown-menu li:hover {
-  background-color: #f0f0f0;
+  background-color: #e6f4ff;
+  border-radius: 8px;
 }
 .dropdown-menu li img {
-  width: 5vw;
-  height: auto;
+  width: auto;
+  height: 5vh;
   margin-right: 5px;
 }
 .check-mark {
@@ -66,12 +102,14 @@
   z-index: 1000;
 }
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 15px;
   text-align: center;
   max-width: 400px;
   width: 100%;
+  box-shadow: 0 6px 16px rgba(0, 120, 210, 0.15);
+  border: 3px solid #a7d7ff;
 }
 .modal-content h2 {
   margin-top: 0;
@@ -89,15 +127,24 @@
 }
 .modal-content button {
   padding: 10px;
-  background: #28a745;
+  background: #4db8ff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 3px 0 #2e9ede;
+  transition: all 0.2s ease;
 }
 .modal-content button:hover {
-  background: #218838;
+  background: #3aa8f5;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #2e9ede;
+}
+.modal-content button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #2e9ede;
 }
 .feedback {
   position: absolute;
