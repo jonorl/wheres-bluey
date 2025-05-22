@@ -21,13 +21,14 @@ function ImageSelector({ imageUrl }) {
   const [foundCount, setFoundCount] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showLeaderboardModal, setShowLeaderboardModal] = useState(false);
   const [playerName, setPlayerName] = useState('');
-  const [feedback, setFeedback] = useState(null); // { type: 'correct' | 'incorrect', x: number, y: number }
+  const [rankings, setRankings] = useState([]);
+  const [feedback, setFeedback] = useState(null);
   const dropdownRef = useRef(null);
   const imageRef = useRef(null);
   const timerRef = useRef(null);
 
-  // Timer logic
   useEffect(() => {
     timerRef.current = setInterval(() => {
       setTimeElapsed((prev) => prev + 1);
@@ -35,7 +36,6 @@ function ImageSelector({ imageUrl }) {
     return () => clearInterval(timerRef.current);
   }, []);
 
-  // Handle win condition
   useEffect(() => {
     console.log(`Current foundCount: ${foundCount}`);
     if (foundCount === 3) {
@@ -45,7 +45,6 @@ function ImageSelector({ imageUrl }) {
     }
   }, [foundCount]);
 
-  // Clear feedback after 2 seconds
   useEffect(() => {
     if (feedback) {
       const timeout = setTimeout(() => {
@@ -121,21 +120,71 @@ function ImageSelector({ imageUrl }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch(`http://localhost:3000/api/v1/ranking/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: playerName,
-        time: timeElapsed,
-      })
-    })
-    console.log(`Submitting name: ${playerName}, Time: ${timeElapsed} seconds`);
-    const ranking = await fetch(`http://localhost:3000/api/v1/ranking/`);
-    console.log("ranking", ranking)
-    setShowModal(false);
-    setPlayerName('');
+
+    if (!playerName.trim()) {
+      console.error('Name cannot be empty');
+      return;
+    }
+    if (!Number.isInteger(timeElapsed) || timeElapsed < 0) {
+      console.error('Time must be a non-negative integer');
+      return;
+    }
+
+    try {
+      console.log(`Submitting name: ${playerName}, Time: ${timeElapsed} seconds`);
+
+      // Send POST request to submit ranking
+      const submitResponse = await fetch('http://localhost:3000/api/v1/ranking/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: playerName,
+          time: timeElapsed,
+        }),
+      });
+
+      if (!submitResponse.ok) {
+        const errorData = await submitResponse.json();
+        throw new Error(`Failed to submit ranking: ${submitResponse.status} - ${errorData.error || 'Unknown error'}`);
+      }
+
+      const submitData = await submitResponse.json();
+      console.log('Submitted ranking:', submitData);
+
+      // Fetch updated rankings
+      const rankingResponse = await fetch('http://localhost:3000/api/v1/ranking/');
+      if (!rankingResponse.ok) {
+        throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
+      }
+
+      const rankingData = await rankingResponse.json();
+      console.log('Fetched rankings:', rankingData);
+      setRankings(rankingData.ranking); // Store rankings
+      setShowModal(false); // Close name modal
+      setShowLeaderboardModal(true); // Show leaderboard modal
+      setPlayerName('');
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  };
+
+  const handleLeaderboardClose = () => {
+    setShowLeaderboardModal(false);
+    // Reset game state
+    setFoundCharacters({
+      Socks: false,
+      Muffin: false,
+      'Bob Bilby': false,
+    });
+    setFoundCount(0);
+    setTimeElapsed(0);
+    setClickedCoords(null);
+    // Restart timer
+    timerRef.current = setInterval(() => {
+      setTimeElapsed((prev) => prev + 1);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -235,7 +284,7 @@ function ImageSelector({ imageUrl }) {
             <p>You found all characters in {formatTime(timeElapsed)}!</p>
             <form onSubmit={handleSubmit}>
               <label>
-                Enter your name:&nbsp;
+                Enter your name:
                 <input
                   type="text"
                   name="name"
@@ -247,6 +296,38 @@ function ImageSelector({ imageUrl }) {
               </label>
               <button type="submit">Submit</button>
             </form>
+          </div>
+        </div>
+      )}
+      {showLeaderboardModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Leaderboard</h2>
+            <table className="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rankings.length > 0 ? (
+                  rankings.map((entry, index) => (
+                    <tr key={entry.id}>
+                      <td>{index + 1}</td>
+                      <td>{entry.name}</td>
+                      <td>{formatTime(entry.time)}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3">No rankings available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            <button onClick={handleLeaderboardClose}>Play Again</button>
           </div>
         </div>
       )}
