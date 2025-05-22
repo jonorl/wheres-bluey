@@ -136,9 +136,6 @@ function Beach() {
     const clickY = e.clientY - rect.top;
     const { width, height } = rect;
 
-    const clickXPercent = (clickX / width) * 100;
-    const clickYPercent = (clickY / height) * 100;
-
     setClickedCoords({ x: clickX, y: clickY, imageWidth: width, imageHeight: height });
     setShowDropdown(true);
   };

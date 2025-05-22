@@ -10,7 +10,7 @@ function Playroom() {
   const { sceneName } = useParams();
   const navigate = useNavigate();
 
-  const imageUrl = blueyRoom; // Fixed for playroom, could be dynamic if needed
+  const imageUrl = blueyRoom;
 
   const [clickedCoords, setClickedCoords] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -140,9 +140,6 @@ function Playroom() {
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
     const { width, height } = rect;
-
-    const clickXPercent = (clickX / width) * 100;
-    const clickYPercent = (clickY / height) * 100;
 
     setClickedCoords({ x: clickX, y: clickY, imageWidth: width, imageHeight: height });
     setShowDropdown(true);
