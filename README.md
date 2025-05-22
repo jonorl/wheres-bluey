@@ -75,10 +75,16 @@ Before you start, ensure you have:
 4. **Seed the Database** (Optional):
    - Populate the `Characters` table with initial data:
      ```sql
-     INSERT INTO "Characters" (id, name, xrange, yrange) VALUES
-     (gen_random_uuid(), 'Socks', ARRAY[65, 69], ARRAY[40, 51]),
-     (gen_random_uuid(), 'Muffin', ARRAY[35, 41], ARRAY[74, 81]),
-     (gen_random_uuid(), 'Bob Bilby', ARRAY[36, 39], ARRAY[12, 17]);
+    INSERT INTO "Characters" (id, name, xrange, yrange) VALUES
+    (gen_random_uuid(), 'Lucky', '{28,30}', '{30,37}'),
+    (gen_random_uuid(), 'Judo', '{59,65}', '{45,58}'),
+    (gen_random_uuid(), 'Bluey', '{88,92}', '{24,29}'),
+    (gen_random_uuid(), 'Muffin', '{35,41}', '{74,81}'),
+    (gen_random_uuid(), 'Lucky''s dad', '{90,94}', '{23,31}'),
+    (gen_random_uuid(), 'Bob Bilby', '{36,39}', '{12,17}'),
+    (gen_random_uuid(), 'Bingo', '{29,32}', '{15,19}'),
+    (gen_random_uuid(), 'Socks', '{65,69}', '{40,51}'),
+    (gen_random_uuid(), 'Pelican', '{39,44}', '{17,24}')
      ```
 
 ## Usage
