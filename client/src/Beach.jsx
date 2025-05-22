@@ -1,16 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
-import './imageSelector.css';
-import socksImage from './assets/bluey-room-socks.jpg';
-import muffinImage from './assets/bluey-room-muffin.jpg';
-import bobBilbyImage from './assets/bluey-room-bob-bilby.jpg';
+import { useParams, useNavigate } from 'react-router-dom';
+import './scenario.css';
+import bingoImage from './assets/bluey-beach-bingo.jpg';
+import blueyImage from './assets/bluey-beach-bluey.jpg';
+import pelicanImage from './assets/bluey-beach-pelican.jpg';
+import blueyBeach from './assets/bluey-beach-1440p.jpg';
 
-function ImageSelector({ imageUrl }) {
+function Beach() {
+  const { sceneName } = useParams();
+  const navigate = useNavigate();
+
+  const imageUrl = blueyBeach;
+
   const [clickedCoords, setClickedCoords] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [foundCharacters, setFoundCharacters] = useState({
-    Socks: false,
-    Muffin: false,
-    'Bob Bilby': false,
+    Bingo: false,
+    Bluey: false,
+    Pelican: false,
   });
   const [foundCount, setFoundCount] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -28,16 +35,14 @@ function ImageSelector({ imageUrl }) {
   const imageRef = useRef(null);
   const timerRef = useRef(null);
 
-  // Fetch characters on mount
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/v1/characters/');
+        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${sceneName}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Fetched characters:', data);
 
         if (!Array.isArray(data.coordinates)) {
           throw new Error('Invalid data format: coordinates must be an array');
@@ -71,9 +76,8 @@ function ImageSelector({ imageUrl }) {
     };
 
     fetchCharacters();
-  }, []);
+  }, [sceneName]);
 
-  // Start game timer (for display only)
   useEffect(() => {
     if (gameStarted) {
       timerRef.current = setInterval(() => {
@@ -83,17 +87,13 @@ function ImageSelector({ imageUrl }) {
     }
   }, [gameStarted]);
 
-  // Handle win condition
   useEffect(() => {
-    console.log(`Current foundCount: ${foundCount}`);
     if (foundCount === 3) {
-      console.log('You won the game!');
       clearInterval(timerRef.current);
       setShowModal(true);
     }
   }, [foundCount]);
 
-  // Clear feedback after 2 seconds
   useEffect(() => {
     if (feedback) {
       const timeout = setTimeout(() => {
@@ -118,7 +118,6 @@ function ImageSelector({ imageUrl }) {
       }
 
       const data = await response.json();
-      console.log('Game started:', data);
       setRankingId(data.id);
       setGameStarted(true);
     } catch (error) {
@@ -140,9 +139,6 @@ function ImageSelector({ imageUrl }) {
     const clickXPercent = (clickX / width) * 100;
     const clickYPercent = (clickY / height) * 100;
 
-    console.log(`Clicked at: X = ${clickX}, Y = ${clickY}`);
-    console.log(`Percentage: X = ${clickXPercent}%, Y = ${clickYPercent}%`);
-
     setClickedCoords({ x: clickX, y: clickY, imageWidth: width, imageHeight: height });
     setShowDropdown(true);
   };
@@ -163,21 +159,15 @@ function ImageSelector({ imageUrl }) {
       clickYPercent >= charName.yRange[0] &&
       clickYPercent <= charName.yRange[1]
     ) {
-      console.log(`Found ${char}! Current foundCount before update: ${foundCount}`);
       setFeedback({ type: 'correct', x: clickX, y: clickY });
       if (!foundCharacters[char]) {
         setFoundCharacters((prev) => ({
           ...prev,
           [char]: true,
         }));
-        setFoundCount((prevCount) => {
-          const newCount = prevCount + 1;
-          console.log(`Updating foundCount to: ${newCount}`);
-          return newCount;
-        });
+        setFoundCount((prevCount) => prevCount + 1);
       }
     } else {
-      console.log(`Clicked outside ${char}'s range.`);
       setFeedback({ type: 'incorrect', x: clickX, y: clickY });
     }
     setShowDropdown(false);
@@ -197,14 +187,11 @@ function ImageSelector({ imageUrl }) {
     e.preventDefault();
 
     if (!playerName.trim()) {
-      console.error('Name cannot be empty');
       return;
     }
 
     try {
       setIsLoading(true);
-      console.log(`Submitting name: ${playerName}, Ranking ID: ${rankingId}`);
-
       const submitResponse = await fetch('http://localhost:3000/api/v1/ranking/', {
         method: 'POST',
         headers: {
@@ -217,13 +204,11 @@ function ImageSelector({ imageUrl }) {
       });
 
       if (!submitResponse.ok) {
-        const errorData = await submitResponse.json();
-        throw new Error(`Failed to submit ranking: ${submitResponse.status} - ${errorData.error || 'Unknown error'}`);
+        throw new Error(`Failed to submit ranking: ${submitResponse.status}`);
       }
 
       const submitData = await submitResponse.json();
-      console.log('Submitted ranking:', submitData);
-      setTimeElapsed(submitData.ranking.time); // Update timeElapsed with backend-calculated time
+      setTimeElapsed(submitData.ranking.time);
 
       const rankingResponse = await fetch('http://localhost:3000/api/v1/ranking/');
       if (!rankingResponse.ok) {
@@ -231,7 +216,6 @@ function ImageSelector({ imageUrl }) {
       }
 
       const rankingData = await rankingResponse.json();
-      console.log('Fetched rankings:', rankingData);
       setRankings(rankingData.ranking);
       setShowModal(false);
       setShowLeaderboardModal(true);
@@ -247,15 +231,16 @@ function ImageSelector({ imageUrl }) {
   const handleLeaderboardClose = () => {
     setShowLeaderboardModal(false);
     setFoundCharacters({
-      Socks: false,
-      Muffin: false,
-      'Bob Bilby': false,
+      Bingo: false,
+      Bluey: false,
+      Pelican: false,
     });
     setFoundCount(0);
     setTimeElapsed(0);
     setClickedCoords(null);
     setGameStarted(false);
     setRankingId('');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -289,14 +274,14 @@ function ImageSelector({ imageUrl }) {
           <div className="modal-content">
             <h2>Error</h2>
             <p>{characterError}</p>
-            <button onClick={() => window.location.reload()}>Retry</button>
+            <button onClick={() => navigate('/')}>Go Back</button>
           </div>
         </div>
       ) : !gameStarted && !isLoading ? (
         <div className="modal">
           <div className="modal-content">
             <h2>Welcome to Bluey's Hide and Seek!</h2>
-            <p>Find Socks, Muffin, and Bob Bilby as fast as you can!</p>
+            <p>Find Bingo, Bluey, and Pelican as fast as you can!</p>
             <button onClick={handleStartGame}>Start Game</button>
           </div>
         </div>
@@ -350,28 +335,28 @@ function ImageSelector({ imageUrl }) {
                 >
                   <ul>
                     <li
-                      style={{ position: 'relative', opacity: foundCharacters.Socks ? 0.5 : 1 }}
-                      onClick={() => !foundCharacters.Socks && handleCharacterChoice('Socks', clickedCoords.x, clickedCoords.y)}
+                      style={{ position: 'relative', opacity: foundCharacters.Bingo ? 0.5 : 1 }}
+                      onClick={() => !foundCharacters.Bingo && handleCharacterChoice('Bingo', clickedCoords.x, clickedCoords.y)}
                     >
-                      <img src={socksImage} alt="Socks" />
-                      {foundCharacters.Socks && <span className="check-mark">✔</span>}
-                      Socks
+                      <img src={bingoImage} alt="Bingo" />
+                      {foundCharacters.Bingo && <span className="check-mark">✔</span>}
+                      Bingo
                     </li>
                     <li
-                      style={{ position: 'relative', opacity: foundCharacters.Muffin ? 0.5 : 1 }}
-                      onClick={() => !foundCharacters.Muffin && handleCharacterChoice('Muffin', clickedCoords.x, clickedCoords.y)}
+                      style={{ position: 'relative', opacity: foundCharacters.Bluey ? 0.5 : 1 }}
+                      onClick={() => !foundCharacters.Bluey && handleCharacterChoice('Bluey', clickedCoords.x, clickedCoords.y)}
                     >
-                      <img src={muffinImage} alt="Muffin" />
-                      {foundCharacters.Muffin && <span className="check-mark">✔</span>}
-                      Muffin
+                      <img src={blueyImage} alt="Bluey" />
+                      {foundCharacters.Bluey && <span className="check-mark">✔</span>}
+                      Bluey
                     </li>
                     <li
-                      style={{ position: 'relative', opacity: foundCharacters['Bob Bilby'] ? 0.5 : 1 }}
-                      onClick={() => !foundCharacters['Bob Bilby'] && handleCharacterChoice('Bob Bilby', clickedCoords.x, clickedCoords.y)}
+                      style={{ position: 'relative', opacity: foundCharacters.Pelican ? 0.5 : 1 }}
+                      onClick={() => !foundCharacters.Pelican && handleCharacterChoice('Pelican', clickedCoords.x, clickedCoords.y)}
                     >
-                      <img src={bobBilbyImage} alt="Bob Bilby" />
-                      {foundCharacters['Bob Bilby'] && <span className="check-mark">✔</span>}
-                      Bob Bilby
+                      <img src={pelicanImage} alt="Pelican" />
+                      {foundCharacters.Pelican && <span className="check-mark">✔</span>}
+                      Pelican
                     </li>
                   </ul>
                 </div>
@@ -438,4 +423,4 @@ function ImageSelector({ imageUrl }) {
   );
 }
 
-export default ImageSelector;
+export default Beach;

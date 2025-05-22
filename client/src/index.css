@@ -1,0 +1,67 @@
+body {
+  background-color: #88caf2;
+  position: relative;
+}
+
+.image-container {
+  position: relative;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 120, 210, 0.15);
+  max-width: 100%;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.image-container img {
+  border-radius: 18px;
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.Main {
+  display: block;
+  max-width: 100%;
+  height: 200px;
+  margin: 0 auto;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0, 100, 200, 0.08);
+  object-fit: cover;
+}
+
+/* Specific object-position for each image */
+.banner:nth-child(1) .Main {
+  object-position: center 40%; /* Focus on the middle of the playroom */
+}
+.banner:nth-child(2) .Main {
+  object-position: center 20%; /* Focus on the upper beach area */
+}
+.banner:nth-child(3) .Main {
+  object-position: center 50%; /* Focus on the middle of the street */
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 10;
+}
