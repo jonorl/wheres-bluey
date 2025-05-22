@@ -1,67 +1,211 @@
-body {
-  background-color: #88caf2;
-  position: relative;
+body.index-body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #88caf2 0%, #a8d5f2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.image-container {
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Styles */
+.header {
+  background: linear-gradient(90deg, #5a5a87 0%, #4a4a77 100%);
+  color: white;
+  padding: 20px 0;
+  box-shadow: 0 4px 12px rgba(90, 90, 135, 0.3);
   position: relative;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 120, 210, 0.15);
-  max-width: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 100%; /* Ensure full viewport width */
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></linearGradient></defs><rect width="100" height="20" fill="url(%23a)"/></svg>') repeat-x;
+  pointer-events: none;
+}
+
+.header-content {
+  max-width: 1200px; /* Match main-content width */
+  margin: 0 auto; /* Center the content */
+  padding: 0 20px;
   text-align: center;
-  padding: 10px 0;
+  position: relative;
+  z-index: 1;
 }
 
-.image-container img {
-  border-radius: 18px;
-  display: block;
-  max-width: 100%;
-  object-fit: contain;
+.header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.Main {
-  display: block;
-  max-width: 100%;
-  height: 200px;
+.header p {
+  margin: 10px 0 0 0;
+  font-size: 1.1em;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  max-width: 100vw;
+  padding: 30px 30px;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.scene-title {
+  text-align: center;
+  color: #5a5a87;
+  font-size: 2em;
+  font-weight: 400;
+  margin-bottom: 40px;
+  text-shadow: 0 2px 4px rgba(90, 90, 135, 0.1);
+}
+
+.image-container-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 25px;
-  box-shadow: 0 10px 30px rgba(0, 100, 200, 0.08);
-  object-fit: cover;
-}
-
-/* Specific object-position for each image */
-.banner:nth-child(1) .Main {
-  object-position: center 40%; /* Focus on the middle of the playroom */
-}
-.banner:nth-child(2) .Main {
-  object-position: center 20%; /* Focus on the upper beach area */
-}
-.banner:nth-child(3) .Main {
-  object-position: center 50%; /* Focus on the middle of the street */
 }
 
 .banner {
   position: relative;
   width: 100%;
-  height: 200px;
-  margin-bottom: 10px;
-  cursor: pointer;
+  height: 280px;
+  margin: 0;
   overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(90, 90, 135, 0.15);
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.banner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(90, 90, 135, 0.25);
+}
+
+.banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  position: relative;
+}
+
+/* Index page specific .Main styling to avoid conflicts with scenario pages */
+.image-container-index .Main {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: 20px;
+  object-fit: cover;
+  object-position: center center;
+  transition: transform 0.3s ease;
+}
+
+.banner:hover .Main {
+  transform: scale(1.05);
+}
+
+/* Specific object-position for each image - standardized for consistent cropping */
+.banner:nth-child(1) .Main {
+  object-position: center 30%;
+}
+.banner:nth-child(2) .Main {
+  object-position: center 35%;
+}
+.banner:nth-child(3) .Main {
+  object-position: center 45%;
 }
 
 .overlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.6);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
   color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 24px;
-  font-weight: bold;
+  padding: 30px 20px 20px;
+  font-size: 26px;
+  font-weight: 700;
   text-align: center;
   z-index: 10;
+  transition: background 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.banner:hover .overlay {
+  background: linear-gradient(transparent, rgba(90, 90, 135, 0.9));
+}
+
+/* Footer Styles */
+.footer {
+  background: linear-gradient(90deg, #5a5a87 0%, #4a4a77 100%);
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 100vw; 
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.footer-content {
+  margin: 0 auto; 
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+.footer-links {
+  margin-top: 15px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 0.9em;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: white;
+  text-decoration: underline;
 }

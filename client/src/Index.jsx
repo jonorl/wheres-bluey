@@ -6,29 +6,47 @@ import streetImage from './assets/bluey-street.jpg';
 
 function Index() {
   return (
-    <div>
-      <h1 style={{ textAlign: 'center', color: '#007bff', padding: '20px' }}>Please Choose a Scene</h1>
-      <div className="image-container-index">
-        <Link to="/scene/playroom">
+    <>
+      {/* Header */}
+      <header className="header">
+        <div className="header-content">
+          <h1>Where's Bluey project</h1>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="main-content">
+        <h2 className="scene-title">Choose a scene</h2>
+        <div className="image-container-index">
           <div className="banner">
-            <img src={roomImage} alt="Playroom Scene" className="Main" />
-            <div className="overlay">Room</div>
+            <Link to="/scene/playroom" className="banner-link">
+              <img src={roomImage} alt="Playroom Scene" className="Main" />
+              <div className="overlay">Playroom</div>
+            </Link>
           </div>
-        </Link>
-        <Link to="/scene/beach">
           <div className="banner">
-            <img src={beachImage} alt="Beach Scene" className="Main" />
-            <div className="overlay">Beach</div>
+            <Link to="/scene/beach" className="banner-link">
+              <img src={beachImage} alt="Beach Scene" className="Main" />
+              <div className="overlay">Beach</div>
+            </Link>
           </div>
-        </Link>
-        <Link to="/scene/street">
           <div className="banner">
-            <img src={streetImage} alt="Street Scene" className="Main" />
-            <div className="overlay">Street</div>
+            <Link to="/scene/street" className="banner-link">
+              <img src={streetImage} alt="Street Scene" className="Main" />
+              <div className="overlay">Street</div>
+            </Link>
           </div>
-        </Link>
-      </div>
-    </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-content">
+          <p>&copy; Where's Bluey project 8hqczgwx8@mozmail.com</p>
+
+        </div>
+      </footer>
+    </>
   );
 }
 
