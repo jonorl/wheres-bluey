@@ -38,7 +38,7 @@ function Beach() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${beach}`);
+        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${beach}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
@@ -106,7 +106,7 @@ function Beach() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://localhost:3000/api/v1/ranking/start/${beach}`, {
+      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${beach}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -189,7 +189,7 @@ function Beach() {
 
     try {
       setIsLoading(true);
-      const submitResponse = await fetch('http://localhost:3000/api/v1/ranking/', {
+      const submitResponse = await fetch('https://wheres-bluey.onrender.com/api/v1/ranking/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ function Beach() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch(`http://localhost:3000/api/v1/ranking/${beach}`);
+      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${beach}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }

@@ -38,7 +38,7 @@ function Street() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${street}`);
+        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${street}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
@@ -106,7 +106,7 @@ function Street() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://localhost:3000/api/v1/ranking/start/${street}`, {
+      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${street}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -189,7 +189,7 @@ function Street() {
 
     try {
       setIsLoading(true);
-      const submitResponse = await fetch('http://localhost:3000/api/v1/ranking/', {
+      const submitResponse = await fetch('https://wheres-bluey.onrender.com/api/v1/ranking/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ function Street() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch(`http://localhost:3000/api/v1/ranking/${street}`);
+      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${street}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }
