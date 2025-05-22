@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './scenario.css';
 import socksImage from './assets/bluey-room-socks.jpg';
 import muffinImage from './assets/bluey-room-muffin.jpg';
 import bobBilbyImage from './assets/bluey-room-bob-bilby.jpg';
 import blueyRoom from './assets/bluey-room-1440p.jpg';
 
-function Playroom() {
-  const { playroom } = useParams();
+function Playroom({ sceneName }) {
+  // const { playroom } = useParams();
   const navigate = useNavigate();
 
   const imageUrl = blueyRoom;
@@ -39,13 +39,13 @@ function Playroom() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${playroom}`);
+        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${sceneName}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
         const data = await response.json();
         console.log('Fetched characters:', data);
-        console.log("playroom", playroom)
+        console.log("sceneName", sceneName)
 
         if (!Array.isArray(data.coordinates)) {
           throw new Error('Invalid data format: coordinates must be an array');
@@ -79,7 +79,7 @@ function Playroom() {
     };
 
     fetchCharacters();
-  }, [playroom]);
+  }, [sceneName]);
 
   // Start game timer
   useEffect(() => {
@@ -112,7 +112,7 @@ function Playroom() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${playroom}`, {
+      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${sceneName}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ function Playroom() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${playroom}`);
+      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${sceneName}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }

@@ -11,15 +11,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/scene/playroom",
-    element: <Playroom />,
+    element: <Playroom sceneName="playroom"/>,
   },
   {
     path: "/scene/beach",
-    element: <Beach />,
+    element: <Beach sceneName="beach"/>,
   },
   {
     path: "/scene/street",
-    element: <Street />,
+    element: <Street sceneName="street"/>,
   },
   {
     path: "*",

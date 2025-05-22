@@ -30,7 +30,6 @@ mainRouter.post('/api/v1/ranking/start/:scene', async (req, res) => {
 // Update ranking entry with name and end time
 mainRouter.post('/api/v1/ranking/', async (req, res) => {
   const { id, name } = req.body;
-  const scene = req.params.scene
 
   if (!id || typeof id !== 'string') {
     return res.status(400).json({ error: 'ID is required and must be a string' });
