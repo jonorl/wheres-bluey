@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './scenario.css';
 import judoImage from './assets/bluey-street-judo.jpg';
 import luckyImage from './assets/bluey-street-lucky.jpg';
 import luckysDadImage from './assets/bluey-street-luckys-dad.jpg';
 import blueyStreet from './assets/bluey-street.jpg';
 
-function Street() {
-  const { street } = useParams();
+function Street({sceneName}) {
   const navigate = useNavigate();
 
   const imageUrl = blueyStreet;
@@ -38,7 +37,7 @@ function Street() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${street}`);
+        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${sceneName}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
@@ -76,7 +75,7 @@ function Street() {
     };
 
     fetchCharacters();
-  }, [street]);
+  }, [sceneName]);
 
   useEffect(() => {
     if (gameStarted) {
@@ -106,7 +105,7 @@ function Street() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${street}`, {
+      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${sceneName}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +206,7 @@ function Street() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${street}`);
+      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${sceneName}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }

@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './scenario.css';
 import bingoImage from './assets/bluey-beach-bingo.jpg';
 import blueyImage from './assets/bluey-beach-bluey.jpg';
 import pelicanImage from './assets/bluey-beach-pelican.jpg';
 import blueyBeach from './assets/bluey-beach-1440p.jpg';
 
-function Beach() {
-  const { beach } = useParams();
+function Beach({sceneName}) {
   const navigate = useNavigate();
 
   const imageUrl = blueyBeach;
@@ -38,7 +37,7 @@ function Beach() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${beach}`);
+        const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${sceneName}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
@@ -76,7 +75,7 @@ function Beach() {
     };
 
     fetchCharacters();
-  }, [beach]);
+  }, [sceneName]);
 
   useEffect(() => {
     if (gameStarted) {
@@ -106,7 +105,7 @@ function Beach() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${beach}`, {
+      const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${sceneName}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +206,7 @@ function Beach() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${beach}`);
+      const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${sceneName}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }
