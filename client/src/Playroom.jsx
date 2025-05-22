@@ -45,6 +45,7 @@ function Playroom() {
         }
         const data = await response.json();
         console.log('Fetched characters:', data);
+        console.log("playroom", playroom)
 
         if (!Array.isArray(data.coordinates)) {
           throw new Error('Invalid data format: coordinates must be an array');

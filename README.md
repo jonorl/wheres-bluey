@@ -17,7 +17,7 @@ This project is a full-stack web app built with React, Node.js, Express, and Pri
 - **Backend**: Node.js, Express
 - **Database**: PostgreSQL with Prisma ORM
 - **APIs**: RESTful endpoints for character coordinates, game start, and leaderboard rankings
-- **Deployment**: TBC
+- **Deployment**: Netlify for frontend client, Neon for db, Render for backend server.
 
 ## Prerequisites
 
@@ -134,3 +134,7 @@ bluey-hide-and-seek/
 │   └── package.json
 └── README.md
 ```
+
+## Live demo
+
+https://wheres-bluey.netlify.app/
