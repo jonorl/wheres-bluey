@@ -22,6 +22,7 @@ function ImageSelector({ imageUrl }) {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [showLeaderboardModal, setShowLeaderboardModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [playerName, setPlayerName] = useState('');
   const [rankings, setRankings] = useState([]);
   const [feedback, setFeedback] = useState(null);
@@ -131,6 +132,7 @@ function ImageSelector({ imageUrl }) {
     }
 
     try {
+      setIsLoading(true);
       console.log(`Submitting name: ${playerName}, Time: ${timeElapsed} seconds`);
 
       // Send POST request to submit ranking
@@ -161,12 +163,15 @@ function ImageSelector({ imageUrl }) {
 
       const rankingData = await rankingResponse.json();
       console.log('Fetched rankings:', rankingData);
-      setRankings(rankingData.ranking); // Store rankings
-      setShowModal(false); // Close name modal
-      setShowLeaderboardModal(true); // Show leaderboard modal
+      setRankings(rankingData.ranking);
+      setShowModal(false);
+      setShowLeaderboardModal(true);
       setPlayerName('');
     } catch (error) {
       console.error('Error:', error.message);
+      setShowModal(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -277,7 +282,7 @@ function ImageSelector({ imageUrl }) {
           </ul>
         </div>
       )}
-      {showModal && (
+      {showModal && !isLoading && (
         <div className="modal">
           <div className="modal-content">
             <h2>Congratulations!</h2>
@@ -299,7 +304,15 @@ function ImageSelector({ imageUrl }) {
           </div>
         </div>
       )}
-      {showLeaderboardModal && (
+      {isLoading && (
+        <div className="modal">
+          <div className="modal-content loading-content">
+            <div className="loading-spinner"></div>
+            <p>Loading leaderboard...</p>
+          </div>
+        </div>
+      )}
+      {showLeaderboardModal && !isLoading && (
         <div className="modal">
           <div className="modal-content">
             <h2>Leaderboard</h2>

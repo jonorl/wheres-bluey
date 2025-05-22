@@ -1,5 +1,5 @@
 body {
-  background-color: #88CAF2;
+  background-color: #88caf2;
   position: relative;
 }
 
@@ -157,24 +157,67 @@ body {
 .feedback-incorrect {
   color: red;
 }
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.leaderboard-table th {
+  background: #f4f4f4;
+  font-weight: bold;
+}
+
+.leaderboard-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: #90caf9;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
 @keyframes fadeInOut {
-  0% { 
-    opacity: 0; 
+  0% {
+    opacity: 0;
     transform: scale(0.8);
   }
-  20% { 
-    opacity: 1; 
+  20% {
+    opacity: 1;
     transform: scale(1.1);
   }
-  30% { 
-    opacity: 1; 
+  30% {
+    opacity: 1;
     transform: scale(1);
   }
-  80% { 
-    opacity: 1; 
+  80% {
+    opacity: 1;
   }
-  100% { 
-    opacity: 0; 
+  100% {
+    opacity: 0;
     transform: scale(0.9);
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
