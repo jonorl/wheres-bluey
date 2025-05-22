@@ -223,7 +223,7 @@ function ImageSelector({ imageUrl }) {
             <p>You found all characters in {formatTime(timeElapsed)}!</p>
             <form onSubmit={handleSubmit}>
               <label>
-                Enter your name:
+                Enter your name:&nbsp;
                 <input
                   type="text"
                   value={playerName}
