@@ -7,7 +7,7 @@ import pelicanImage from './assets/bluey-beach-pelican.jpg';
 import blueyBeach from './assets/bluey-beach-1440p.jpg';
 
 function Beach() {
-  const { sceneName } = useParams();
+  const { beach } = useParams();
   const navigate = useNavigate();
 
   const imageUrl = blueyBeach;
@@ -38,7 +38,7 @@ function Beach() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${sceneName}`);
+        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${beach}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
@@ -76,7 +76,7 @@ function Beach() {
     };
 
     fetchCharacters();
-  }, [sceneName]);
+  }, [beach]);
 
   useEffect(() => {
     if (gameStarted) {
@@ -106,7 +106,7 @@ function Beach() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:3000/api/v1/ranking/start', {
+      const response = await fetch(`http://localhost:3000/api/v1/ranking/start/${beach}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ function Beach() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch('http://localhost:3000/api/v1/ranking/');
+      const rankingResponse = await fetch(`http://localhost:3000/api/v1/ranking/${beach}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }

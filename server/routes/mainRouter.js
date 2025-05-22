@@ -14,9 +14,12 @@ mainRouter.get('/api/v1/characters/', async (req, res) => {
 });
 
 // Start a new game
-mainRouter.post('/api/v1/ranking/start', async (req, res) => {
+mainRouter.post('/api/v1/ranking/start/:scene', async (req, res) => {
   try {
-    const startData = await db.startGame();
+    console.log("params", req.params)
+    const scenario = req.params.scene 
+    console.log(scenario)
+    const startData = await db.startGame(scenario);
     res.json(startData);
   } catch (error) {
     console.error('Error starting game:', error);
@@ -27,6 +30,7 @@ mainRouter.post('/api/v1/ranking/start', async (req, res) => {
 // Update ranking entry with name and end time
 mainRouter.post('/api/v1/ranking/', async (req, res) => {
   const { id, name } = req.body;
+  const scene = req.params.scene
 
   if (!id || typeof id !== 'string') {
     return res.status(400).json({ error: 'ID is required and must be a string' });
@@ -45,9 +49,9 @@ mainRouter.post('/api/v1/ranking/', async (req, res) => {
 });
 
 // Get the full ranking table for the scenario
-mainRouter.get('/api/v1/ranking/:scenario?', async (req, res) => {
+mainRouter.get('/api/v1/ranking/:scene', async (req, res) => {
   try {
-    const ranking = await db.retrieveEntries(req.params.scenario);
+    const ranking = await db.retrieveEntries(req.params.scene);
     res.json({ ranking });
   } catch (error) {
     console.error('Error retrieving rankings:', error);

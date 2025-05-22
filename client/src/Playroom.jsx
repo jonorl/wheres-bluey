@@ -7,7 +7,7 @@ import bobBilbyImage from './assets/bluey-room-bob-bilby.jpg';
 import blueyRoom from './assets/bluey-room-1440p.jpg';
 
 function Playroom() {
-  const { sceneName } = useParams();
+  const { playroom } = useParams();
   const navigate = useNavigate();
 
   const imageUrl = blueyRoom;
@@ -39,7 +39,7 @@ function Playroom() {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${sceneName}`);
+        const response = await fetch(`http://localhost:3000/api/v1/characters?scene=${playroom}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
@@ -78,7 +78,7 @@ function Playroom() {
     };
 
     fetchCharacters();
-  }, [sceneName]);
+  }, [playroom]);
 
   // Start game timer
   useEffect(() => {
@@ -111,7 +111,7 @@ function Playroom() {
   const handleStartGame = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:3000/api/v1/ranking/start', {
+      const response = await fetch(`http://localhost:3000/api/v1/ranking/start/${playroom}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -212,7 +212,7 @@ function Playroom() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch('http://localhost:3000/api/v1/ranking/');
+      const rankingResponse = await fetch(`http://localhost:3000/api/v1/ranking/${playroom}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }
