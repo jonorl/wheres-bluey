@@ -22,10 +22,13 @@ function ImageSelector({ imageUrl }) {
   const [feedback, setFeedback] = useState(null);
   const [characters, setCharacters] = useState([]);
   const [characterError, setCharacterError] = useState('');
+  const [gameStarted, setGameStarted] = useState(false);
+  const [rankingId, setRankingId] = useState('');
   const dropdownRef = useRef(null);
   const imageRef = useRef(null);
   const timerRef = useRef(null);
 
+  // Fetch characters on mount
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
@@ -70,13 +73,17 @@ function ImageSelector({ imageUrl }) {
     fetchCharacters();
   }, []);
 
+  // Start game timer (for display only)
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setTimeElapsed((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, []);
+    if (gameStarted) {
+      timerRef.current = setInterval(() => {
+        setTimeElapsed((prev) => prev + 1);
+      }, 1000);
+      return () => clearInterval(timerRef.current);
+    }
+  }, [gameStarted]);
 
+  // Handle win condition
   useEffect(() => {
     console.log(`Current foundCount: ${foundCount}`);
     if (foundCount === 3) {
@@ -86,6 +93,7 @@ function ImageSelector({ imageUrl }) {
     }
   }, [foundCount]);
 
+  // Clear feedback after 2 seconds
   useEffect(() => {
     if (feedback) {
       const timeout = setTimeout(() => {
@@ -95,8 +103,34 @@ function ImageSelector({ imageUrl }) {
     }
   }, [feedback]);
 
+  const handleStartGame = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('http://localhost:3000/api/v1/ranking/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to start game: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Game started:', data);
+      setRankingId(data.id);
+      setGameStarted(true);
+    } catch (error) {
+      console.error('Error starting game:', error.message);
+      setCharacterError('Failed to start game. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleImageClick = (e) => {
-    if (!imageRef.current || showModal || characterError) return;
+    if (!imageRef.current || showModal || characterError || !gameStarted) return;
 
     const rect = imageRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
@@ -151,7 +185,7 @@ function ImageSelector({ imageUrl }) {
 
   const handleContextMenu = (e) => {
     e.preventDefault();
-    if (showModal || characterError) return;
+    if (showModal || characterError || !gameStarted) return;
     handleImageClick(e);
   };
 
@@ -166,14 +200,10 @@ function ImageSelector({ imageUrl }) {
       console.error('Name cannot be empty');
       return;
     }
-    if (!Number.isInteger(timeElapsed) || timeElapsed < 0) {
-      console.error('Time must be a non-negative integer');
-      return;
-    }
 
     try {
       setIsLoading(true);
-      console.log(`Submitting name: ${playerName}, Time: ${timeElapsed} seconds`);
+      console.log(`Submitting name: ${playerName}, Ranking ID: ${rankingId}`);
 
       const submitResponse = await fetch('http://localhost:3000/api/v1/ranking/', {
         method: 'POST',
@@ -181,8 +211,8 @@ function ImageSelector({ imageUrl }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          id: rankingId,
           name: playerName,
-          time: timeElapsed,
         }),
       });
 
@@ -193,6 +223,7 @@ function ImageSelector({ imageUrl }) {
 
       const submitData = await submitResponse.json();
       console.log('Submitted ranking:', submitData);
+      setTimeElapsed(submitData.ranking.time); // Update timeElapsed with backend-calculated time
 
       const rankingResponse = await fetch('http://localhost:3000/api/v1/ranking/');
       if (!rankingResponse.ok) {
@@ -223,9 +254,8 @@ function ImageSelector({ imageUrl }) {
     setFoundCount(0);
     setTimeElapsed(0);
     setClickedCoords(null);
-    timerRef.current = setInterval(() => {
-      setTimeElapsed((prev) => prev + 1);
-    }, 1000);
+    setGameStarted(false);
+    setRankingId('');
   };
 
   useEffect(() => {
@@ -262,133 +292,145 @@ function ImageSelector({ imageUrl }) {
             <button onClick={() => window.location.reload()}>Retry</button>
           </div>
         </div>
+      ) : !gameStarted && !isLoading ? (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Welcome to Bluey's Hide and Seek!</h2>
+            <p>Find Socks, Muffin, and Bob Bilby as fast as you can!</p>
+            <button onClick={handleStartGame}>Start Game</button>
+          </div>
+        </div>
       ) : (
         <>
-          <div className="timer" style={{ position: 'absolute', top: '10px', left: '10px', color: 'white', background: 'rgba(0, 0, 0, 0.7)', padding: '5px 10px', borderRadius: '5px' }}>
-            Time: {formatTime(timeElapsed)}
-          </div>
-          <img
-            className="Main"
-            ref={imageRef}
-            src={imageUrl}
-            alt="Clickable"
-            onClick={handleImageClick}
-            onContextMenu={handleContextMenu}
-            style={{ cursor: 'crosshair', maxWidth: '100%', height: 'auto' }}
-          />
-          {feedback && (
-            <span
-              className={`feedback feedback-${feedback.type}`}
-              style={{
-                position: 'absolute',
-                left: feedback.x,
-                top: feedback.y,
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              {feedback.type === 'correct' ? '✅' : '🚫'}
-            </span>
-          )}
-          {showDropdown && clickedCoords && (
-            <div
-              ref={dropdownRef}
-              className="dropdown-menu"
-              style={{
-                position: 'absolute',
-                left: clickedCoords.x,
-                top: clickedCoords.y,
-                transform: 'translate(25%, -50%)',
-              }}
-            >
-              <ul>
-                <li
-                  style={{ position: 'relative', opacity: foundCharacters.Socks ? 0.5 : 1 }}
-                  onClick={() => !foundCharacters.Socks && handleCharacterChoice('Socks', clickedCoords.x, clickedCoords.y)}
-                >
-                  <img src={socksImage} alt="Socks" />
-                  {foundCharacters.Socks && <span className="check-mark">✔</span>}
-                  Socks
-                </li>
-                <li
-                  style={{ position: 'relative', opacity: foundCharacters.Muffin ? 0.5 : 1 }}
-                  onClick={() => !foundCharacters.Muffin && handleCharacterChoice('Muffin', clickedCoords.x, clickedCoords.y)}
-                >
-                  <img src={muffinImage} alt="Muffin" />
-                  {foundCharacters.Muffin && <span className="check-mark">✔</span>}
-                  Muffin
-                </li>
-                <li
-                  style={{ position: 'relative', opacity: foundCharacters['Bob Bilby'] ? 0.5 : 1 }}
-                  onClick={() => !foundCharacters['Bob Bilby'] && handleCharacterChoice('Bob Bilby', clickedCoords.x, clickedCoords.y)}
-                >
-                  <img src={bobBilbyImage} alt="Bob Bilby" />
-                  {foundCharacters['Bob Bilby'] && <span className="check-mark">✔</span>}
-                  Bob Bilby
-                </li>
-              </ul>
-            </div>
-          )}
-          {showModal && !isLoading && (
-            <div className="modal">
-              <div className="modal-content">
-                <h2>Congratulations!</h2>
-                <p>You found all characters in {formatTime(timeElapsed)}!</p>
-                <form onSubmit={handleSubmit}>
-                  <label>
-                    Enter your name:
-                    <input
-                      type="text"
-                      name="name"
-                      value={playerName}
-                      onChange={handleNameChange}
-                      placeholder="Your name"
-                      required
-                    />
-                  </label>
-                  <button type="submit">Submit</button>
-                </form>
-              </div>
-            </div>
-          )}
           {isLoading && (
             <div className="modal">
               <div className="modal-content loading-content">
                 <div className="loading-spinner"></div>
-                <p>Loading leaderboard...</p>
+                <p>{gameStarted ? 'Loading leaderboard...' : 'Starting game...'}</p>
               </div>
             </div>
           )}
-          {showLeaderboardModal && !isLoading && (
-            <div className="modal">
-              <div className="modal-content">
-                <h2>Leaderboard</h2>
-                <table className="leaderboard-table">
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Name</th>
-                      <th>Time</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rankings.length > 0 ? (
-                      rankings.map((entry, index) => (
-                        <tr key={entry.id}>
-                          <td>{index + 1}</td>
-                          <td>{entry.name}</td>
-                          <td>{formatTime(entry.time)}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="3">No rankings available</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-                <button onClick={handleLeaderboardClose}>Play Again</button>
+          {gameStarted && (
+            <>
+              <div className="timer" style={{ position: 'absolute', top: '10px', left: '10px', color: 'white', background: 'rgba(0, 0, 0, 0.7)', padding: '5px 10px', borderRadius: '5px' }}>
+                Time: {formatTime(timeElapsed)}
               </div>
-            </div>
+              <img
+                className="Main"
+                ref={imageRef}
+                src={imageUrl}
+                alt="Clickable"
+                onClick={handleImageClick}
+                onContextMenu={handleContextMenu}
+                style={{ cursor: 'crosshair', maxWidth: '100%', height: 'auto' }}
+              />
+              {feedback && (
+                <span
+                  className={`feedback feedback-${feedback.type}`}
+                  style={{
+                    position: 'absolute',
+                    left: feedback.x,
+                    top: feedback.y,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  {feedback.type === 'correct' ? '✅' : '🚫'}
+                </span>
+              )}
+              {showDropdown && clickedCoords && (
+                <div
+                  ref={dropdownRef}
+                  className="dropdown-menu"
+                  style={{
+                    position: 'absolute',
+                    left: clickedCoords.x,
+                    top: clickedCoords.y,
+                    transform: 'translate(25%, -50%)',
+                  }}
+                >
+                  <ul>
+                    <li
+                      style={{ position: 'relative', opacity: foundCharacters.Socks ? 0.5 : 1 }}
+                      onClick={() => !foundCharacters.Socks && handleCharacterChoice('Socks', clickedCoords.x, clickedCoords.y)}
+                    >
+                      <img src={socksImage} alt="Socks" />
+                      {foundCharacters.Socks && <span className="check-mark">✔</span>}
+                      Socks
+                    </li>
+                    <li
+                      style={{ position: 'relative', opacity: foundCharacters.Muffin ? 0.5 : 1 }}
+                      onClick={() => !foundCharacters.Muffin && handleCharacterChoice('Muffin', clickedCoords.x, clickedCoords.y)}
+                    >
+                      <img src={muffinImage} alt="Muffin" />
+                      {foundCharacters.Muffin && <span className="check-mark">✔</span>}
+                      Muffin
+                    </li>
+                    <li
+                      style={{ position: 'relative', opacity: foundCharacters['Bob Bilby'] ? 0.5 : 1 }}
+                      onClick={() => !foundCharacters['Bob Bilby'] && handleCharacterChoice('Bob Bilby', clickedCoords.x, clickedCoords.y)}
+                    >
+                      <img src={bobBilbyImage} alt="Bob Bilby" />
+                      {foundCharacters['Bob Bilby'] && <span className="check-mark">✔</span>}
+                      Bob Bilby
+                    </li>
+                  </ul>
+                </div>
+              )}
+              {showModal && !isLoading && (
+                <div className="modal">
+                  <div className="modal-content">
+                    <h2>Congratulations!</h2>
+                    <p>You found all characters in {formatTime(timeElapsed)}!</p>
+                    <form onSubmit={handleSubmit}>
+                      <label>
+                        Enter your name:
+                        <input
+                          type="text"
+                          name="name"
+                          value={playerName}
+                          onChange={handleNameChange}
+                          placeholder="Your name"
+                          required
+                        />
+                      </label>
+                      <button type="submit">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              )}
+              {showLeaderboardModal && !isLoading && (
+                <div className="modal">
+                  <div className="modal-content">
+                    <h2>Leaderboard</h2>
+                    <table className="leaderboard-table">
+                      <thead>
+                        <tr>
+                          <th>Rank</th>
+                          <th>Name</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rankings.length > 0 ? (
+                          rankings.map((entry, index) => (
+                            <tr key={entry.id}>
+                              <td>{index + 1}</td>
+                              <td>{entry.name}</td>
+                              <td>{formatTime(entry.time)}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="3">No rankings available</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                    <button onClick={handleLeaderboardClose}>Play Again</button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </>
       )}

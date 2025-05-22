@@ -1,26 +1,58 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const mainRouter = Router();
 const db = require('../db/queries');
 
+// Get all character coordinates
+mainRouter.get('/api/v1/characters/', async (req, res) => {
+  try {
+    const coordinates = await db.retrieveCharacters();
+    res.json({ coordinates });
+  } catch (error) {
+    console.error('Error fetching characters:', error);
+    res.status(500).json({ error: 'Failed to retrieve characters' });
+  }
+});
+
+// Start a new game
+mainRouter.post('/api/v1/ranking/start', async (req, res) => {
+  try {
+    const startData = await db.startGame();
+    res.json(startData);
+  } catch (error) {
+    console.error('Error starting game:', error);
+    res.status(500).json({ error: 'Failed to start game' });
+  }
+});
+
+// Update ranking entry with name and end time
+mainRouter.post('/api/v1/ranking/', async (req, res) => {
+  const { id, name } = req.body;
+
+  if (!id || typeof id !== 'string') {
+    return res.status(400).json({ error: 'ID is required and must be a string' });
+  }
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return res.status(400).json({ error: 'Name is required and must be a non-empty string' });
+  }
+
+  try {
+    const ranking = await db.updateEntry(id, name);
+    res.json({ ranking });
+  } catch (error) {
+    console.error('Error updating ranking:', error);
+    res.status(500).json({ error: 'Failed to update ranking' });
+  }
+});
+
 // Get the full ranking table for the scenario
-mainRouter.get("/api/v1/ranking/:scenario?", async (req, res) => {
-  const ranking = await db.retrieveEntries(req.params.scenario);
-  res.json({ ranking });
-});
-
-// Get the coordinates for the characters
-mainRouter.get("/api/v1/characters/", async (req, res) => {
-  const coordinates = await db.retrieveCharacters();
-  res.json({ coordinates });
-});
-
-// Add new entry to ranking table
-mainRouter.post("/api/v1/ranking/:scenario?", async (req, res) => {
-  const name = req.body.name;
-  const time = req.body.time;
-  const scenario = req.params.scenario;
-  const ranking = await db.insertNewEntry(name, time, scenario);
-  res.json({ ranking });
+mainRouter.get('/api/v1/ranking/:scenario?', async (req, res) => {
+  try {
+    const ranking = await db.retrieveEntries(req.params.scenario);
+    res.json({ ranking });
+  } catch (error) {
+    console.error('Error retrieving rankings:', error);
+    res.status(500).json({ error: 'Failed to retrieve rankings' });
+  }
 });
 
 module.exports = mainRouter;

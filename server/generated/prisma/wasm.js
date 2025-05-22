@@ -125,7 +125,8 @@ exports.Prisma.RankingScalarFieldEnum = {
   name: 'name',
   time: 'time',
   date: 'date',
-  scenario: 'scenario'
+  scenario: 'scenario',
+  dateEnd: 'dateEnd'
 };
 
 exports.Prisma.CharactersScalarFieldEnum = {

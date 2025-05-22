@@ -1,3 +1,4 @@
+/* imageSelector.css */
 body {
   background-color: #88caf2;
   position: relative;
@@ -12,6 +13,7 @@ body {
   max-height: 85vh;
   text-align: center;
 }
+
 .image-container img {
   border-radius: 18px;
   display: block;
@@ -19,6 +21,7 @@ body {
   max-height: 85vh;
   object-fit: contain;
 }
+
 .Main {
   display: block;
   max-width: 100%;
@@ -30,6 +33,7 @@ body {
   box-shadow: 0 10px 30px rgba(0, 100, 200, 0.08);
   object-fit: contain;
 }
+
 .dropdown-menu {
   position: absolute;
   background: rgba(255, 255, 255, 0.9);
@@ -39,6 +43,7 @@ body {
   z-index: 1000;
   padding: 12px;
 }
+
 .dropdown-menu ul {
   list-style: none;
   margin: 0;
@@ -48,6 +53,7 @@ body {
   flex-direction: column;
   justify-content: left;
 }
+
 .dropdown-menu li {
   display: flex;
   align-items: center;
@@ -57,15 +63,18 @@ body {
   cursor: pointer;
   position: relative;
 }
+
 .dropdown-menu li:hover {
   background-color: #e6f4ff;
   border-radius: 8px;
 }
+
 .dropdown-menu li img {
   width: auto;
   height: 5vh;
   margin-right: 5px;
 }
+
 .check-mark {
   position: absolute;
   top: 50%;
@@ -76,6 +85,7 @@ body {
   font-weight: bold;
   z-index: 10;
 }
+
 .timer {
   position: absolute;
   top: 10px;
@@ -87,6 +97,7 @@ body {
   font-size: 16px;
   z-index: 10;
 }
+
 .modal {
   position: fixed;
   top: 0;
@@ -99,6 +110,7 @@ body {
   align-items: center;
   z-index: 1000;
 }
+
 .modal-content {
   background: rgba(255, 255, 255, 0.95);
   padding: 25px;
@@ -109,20 +121,30 @@ body {
   box-shadow: 0 6px 16px rgba(0, 120, 210, 0.15);
   border: 3px solid #a7d7ff;
 }
+
 .modal-content h2 {
   margin-top: 0;
+  color: #007bff;
 }
+
+.modal-content p {
+  margin: 10px 0;
+  color: #333;
+}
+
 .modal-content form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .modal-content input {
   padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 .modal-content button {
   padding: 10px;
   background: #4db8ff;
@@ -135,15 +157,18 @@ body {
   box-shadow: 0 3px 0 #2e9ede;
   transition: all 0.2s ease;
 }
+
 .modal-content button:hover {
   background: #3aa8f5;
   transform: translateY(-2px);
   box-shadow: 0 5px 0 #2e9ede;
 }
+
 .modal-content button:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #2e9ede;
 }
+
 .feedback {
   position: absolute;
   font-size: 40px;
@@ -151,9 +176,11 @@ body {
   animation: fadeInOut 2s ease-in-out forwards;
   opacity: 0;
 }
+
 .feedback-correct {
   color: green;
 }
+
 .feedback-incorrect {
   color: red;
 }
@@ -178,6 +205,13 @@ body {
 
 .leaderboard-table tr:nth-child(even) {
   background: #f9f9f9;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .loading-spinner {
