@@ -128,6 +128,13 @@ exports.Prisma.RankingScalarFieldEnum = {
   scenario: 'scenario'
 };
 
+exports.Prisma.CharactersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  xrange: 'xrange',
+  yrange: 'yrange'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -145,7 +152,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Ranking: 'Ranking'
+  Ranking: 'Ranking',
+  Characters: 'Characters'
 };
 
 /**

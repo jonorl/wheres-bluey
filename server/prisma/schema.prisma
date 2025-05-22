@@ -9,9 +9,16 @@ datasource db {
 }
 
 model Ranking {
-  id         String   @id @default(uuid()) @db.Uuid
-  name       String
-  time       Int
-  date       DateTime @default(now())
-  scenario   String?
+  id       String   @id @default(uuid()) @db.Uuid
+  name     String
+  time     Int
+  date     DateTime @default(now())
+  scenario String?
+}
+
+model Characters {
+  id     String @id @default(uuid()) @db.Uuid
+  name   String @unique
+  xrange Int[]
+  yrange Int[]
 }

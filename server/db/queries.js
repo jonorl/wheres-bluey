@@ -25,7 +25,14 @@ async function retrieveEntries(scenario) {
   return result;
 }
 
+async function retrieveCharacters() {
+  const result = await prisma.characters.findMany({
+  });
+  return result;
+}
+
 module.exports = {
   insertNewEntry,
   retrieveEntries,
+  retrieveCharacters,
 };

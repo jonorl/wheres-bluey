@@ -18,6 +18,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  * 
  */
 export type Ranking = $Result.DefaultSelection<Prisma.$RankingPayload>
+/**
+ * Model Characters
+ * 
+ */
+export type Characters = $Result.DefaultSelection<Prisma.$CharactersPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -153,6 +158,16 @@ export class PrismaClient<
     * ```
     */
   get ranking(): Prisma.RankingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.characters`: Exposes CRUD operations for the **Characters** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Characters
+    * const characters = await prisma.characters.findMany()
+    * ```
+    */
+  get characters(): Prisma.CharactersDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -593,7 +608,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Ranking: 'Ranking'
+    Ranking: 'Ranking',
+    Characters: 'Characters'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -612,7 +628,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "ranking"
+      modelProps: "ranking" | "characters"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -687,6 +703,80 @@ export namespace Prisma {
           count: {
             args: Prisma.RankingCountArgs<ExtArgs>
             result: $Utils.Optional<RankingCountAggregateOutputType> | number
+          }
+        }
+      }
+      Characters: {
+        payload: Prisma.$CharactersPayload<ExtArgs>
+        fields: Prisma.CharactersFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CharactersFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CharactersFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>
+          }
+          findFirst: {
+            args: Prisma.CharactersFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CharactersFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>
+          }
+          findMany: {
+            args: Prisma.CharactersFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>[]
+          }
+          create: {
+            args: Prisma.CharactersCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>
+          }
+          createMany: {
+            args: Prisma.CharactersCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CharactersCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>[]
+          }
+          delete: {
+            args: Prisma.CharactersDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>
+          }
+          update: {
+            args: Prisma.CharactersUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>
+          }
+          deleteMany: {
+            args: Prisma.CharactersDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CharactersUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CharactersUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>[]
+          }
+          upsert: {
+            args: Prisma.CharactersUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharactersPayload>
+          }
+          aggregate: {
+            args: Prisma.CharactersAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCharacters>
+          }
+          groupBy: {
+            args: Prisma.CharactersGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CharactersGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CharactersCountArgs<ExtArgs>
+            result: $Utils.Optional<CharactersCountAggregateOutputType> | number
           }
         }
       }
@@ -775,6 +865,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     ranking?: RankingOmit
+    characters?: CharactersOmit
   }
 
   /* Types for Logging */
@@ -1899,6 +1990,1018 @@ export namespace Prisma {
 
 
   /**
+   * Model Characters
+   */
+
+  export type AggregateCharacters = {
+    _count: CharactersCountAggregateOutputType | null
+    _avg: CharactersAvgAggregateOutputType | null
+    _sum: CharactersSumAggregateOutputType | null
+    _min: CharactersMinAggregateOutputType | null
+    _max: CharactersMaxAggregateOutputType | null
+  }
+
+  export type CharactersAvgAggregateOutputType = {
+    xrange: number | null
+    yrange: number | null
+  }
+
+  export type CharactersSumAggregateOutputType = {
+    xrange: number[]
+    yrange: number[]
+  }
+
+  export type CharactersMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type CharactersMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type CharactersCountAggregateOutputType = {
+    id: number
+    name: number
+    xrange: number
+    yrange: number
+    _all: number
+  }
+
+
+  export type CharactersAvgAggregateInputType = {
+    xrange?: true
+    yrange?: true
+  }
+
+  export type CharactersSumAggregateInputType = {
+    xrange?: true
+    yrange?: true
+  }
+
+  export type CharactersMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type CharactersMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type CharactersCountAggregateInputType = {
+    id?: true
+    name?: true
+    xrange?: true
+    yrange?: true
+    _all?: true
+  }
+
+  export type CharactersAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Characters to aggregate.
+     */
+    where?: CharactersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Characters to fetch.
+     */
+    orderBy?: CharactersOrderByWithRelationInput | CharactersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CharactersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Characters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Characters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Characters
+    **/
+    _count?: true | CharactersCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CharactersAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CharactersSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CharactersMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CharactersMaxAggregateInputType
+  }
+
+  export type GetCharactersAggregateType<T extends CharactersAggregateArgs> = {
+        [P in keyof T & keyof AggregateCharacters]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCharacters[P]>
+      : GetScalarType<T[P], AggregateCharacters[P]>
+  }
+
+
+
+
+  export type CharactersGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CharactersWhereInput
+    orderBy?: CharactersOrderByWithAggregationInput | CharactersOrderByWithAggregationInput[]
+    by: CharactersScalarFieldEnum[] | CharactersScalarFieldEnum
+    having?: CharactersScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CharactersCountAggregateInputType | true
+    _avg?: CharactersAvgAggregateInputType
+    _sum?: CharactersSumAggregateInputType
+    _min?: CharactersMinAggregateInputType
+    _max?: CharactersMaxAggregateInputType
+  }
+
+  export type CharactersGroupByOutputType = {
+    id: string
+    name: string
+    xrange: number[]
+    yrange: number[]
+    _count: CharactersCountAggregateOutputType | null
+    _avg: CharactersAvgAggregateOutputType | null
+    _sum: CharactersSumAggregateOutputType | null
+    _min: CharactersMinAggregateOutputType | null
+    _max: CharactersMaxAggregateOutputType | null
+  }
+
+  type GetCharactersGroupByPayload<T extends CharactersGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CharactersGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CharactersGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CharactersGroupByOutputType[P]>
+            : GetScalarType<T[P], CharactersGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CharactersSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    xrange?: boolean
+    yrange?: boolean
+  }, ExtArgs["result"]["characters"]>
+
+  export type CharactersSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    xrange?: boolean
+    yrange?: boolean
+  }, ExtArgs["result"]["characters"]>
+
+  export type CharactersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    xrange?: boolean
+    yrange?: boolean
+  }, ExtArgs["result"]["characters"]>
+
+  export type CharactersSelectScalar = {
+    id?: boolean
+    name?: boolean
+    xrange?: boolean
+    yrange?: boolean
+  }
+
+  export type CharactersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "xrange" | "yrange", ExtArgs["result"]["characters"]>
+
+  export type $CharactersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Characters"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      xrange: number[]
+      yrange: number[]
+    }, ExtArgs["result"]["characters"]>
+    composites: {}
+  }
+
+  type CharactersGetPayload<S extends boolean | null | undefined | CharactersDefaultArgs> = $Result.GetResult<Prisma.$CharactersPayload, S>
+
+  type CharactersCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CharactersFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CharactersCountAggregateInputType | true
+    }
+
+  export interface CharactersDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Characters'], meta: { name: 'Characters' } }
+    /**
+     * Find zero or one Characters that matches the filter.
+     * @param {CharactersFindUniqueArgs} args - Arguments to find a Characters
+     * @example
+     * // Get one Characters
+     * const characters = await prisma.characters.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CharactersFindUniqueArgs>(args: SelectSubset<T, CharactersFindUniqueArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Characters that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CharactersFindUniqueOrThrowArgs} args - Arguments to find a Characters
+     * @example
+     * // Get one Characters
+     * const characters = await prisma.characters.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CharactersFindUniqueOrThrowArgs>(args: SelectSubset<T, CharactersFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Characters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersFindFirstArgs} args - Arguments to find a Characters
+     * @example
+     * // Get one Characters
+     * const characters = await prisma.characters.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CharactersFindFirstArgs>(args?: SelectSubset<T, CharactersFindFirstArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Characters that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersFindFirstOrThrowArgs} args - Arguments to find a Characters
+     * @example
+     * // Get one Characters
+     * const characters = await prisma.characters.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CharactersFindFirstOrThrowArgs>(args?: SelectSubset<T, CharactersFindFirstOrThrowArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Characters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Characters
+     * const characters = await prisma.characters.findMany()
+     * 
+     * // Get first 10 Characters
+     * const characters = await prisma.characters.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const charactersWithIdOnly = await prisma.characters.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CharactersFindManyArgs>(args?: SelectSubset<T, CharactersFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Characters.
+     * @param {CharactersCreateArgs} args - Arguments to create a Characters.
+     * @example
+     * // Create one Characters
+     * const Characters = await prisma.characters.create({
+     *   data: {
+     *     // ... data to create a Characters
+     *   }
+     * })
+     * 
+     */
+    create<T extends CharactersCreateArgs>(args: SelectSubset<T, CharactersCreateArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Characters.
+     * @param {CharactersCreateManyArgs} args - Arguments to create many Characters.
+     * @example
+     * // Create many Characters
+     * const characters = await prisma.characters.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CharactersCreateManyArgs>(args?: SelectSubset<T, CharactersCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Characters and returns the data saved in the database.
+     * @param {CharactersCreateManyAndReturnArgs} args - Arguments to create many Characters.
+     * @example
+     * // Create many Characters
+     * const characters = await prisma.characters.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Characters and only return the `id`
+     * const charactersWithIdOnly = await prisma.characters.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CharactersCreateManyAndReturnArgs>(args?: SelectSubset<T, CharactersCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Characters.
+     * @param {CharactersDeleteArgs} args - Arguments to delete one Characters.
+     * @example
+     * // Delete one Characters
+     * const Characters = await prisma.characters.delete({
+     *   where: {
+     *     // ... filter to delete one Characters
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CharactersDeleteArgs>(args: SelectSubset<T, CharactersDeleteArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Characters.
+     * @param {CharactersUpdateArgs} args - Arguments to update one Characters.
+     * @example
+     * // Update one Characters
+     * const characters = await prisma.characters.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CharactersUpdateArgs>(args: SelectSubset<T, CharactersUpdateArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Characters.
+     * @param {CharactersDeleteManyArgs} args - Arguments to filter Characters to delete.
+     * @example
+     * // Delete a few Characters
+     * const { count } = await prisma.characters.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CharactersDeleteManyArgs>(args?: SelectSubset<T, CharactersDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Characters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Characters
+     * const characters = await prisma.characters.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CharactersUpdateManyArgs>(args: SelectSubset<T, CharactersUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Characters and returns the data updated in the database.
+     * @param {CharactersUpdateManyAndReturnArgs} args - Arguments to update many Characters.
+     * @example
+     * // Update many Characters
+     * const characters = await prisma.characters.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Characters and only return the `id`
+     * const charactersWithIdOnly = await prisma.characters.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CharactersUpdateManyAndReturnArgs>(args: SelectSubset<T, CharactersUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Characters.
+     * @param {CharactersUpsertArgs} args - Arguments to update or create a Characters.
+     * @example
+     * // Update or create a Characters
+     * const characters = await prisma.characters.upsert({
+     *   create: {
+     *     // ... data to create a Characters
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Characters we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CharactersUpsertArgs>(args: SelectSubset<T, CharactersUpsertArgs<ExtArgs>>): Prisma__CharactersClient<$Result.GetResult<Prisma.$CharactersPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Characters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersCountArgs} args - Arguments to filter Characters to count.
+     * @example
+     * // Count the number of Characters
+     * const count = await prisma.characters.count({
+     *   where: {
+     *     // ... the filter for the Characters we want to count
+     *   }
+     * })
+    **/
+    count<T extends CharactersCountArgs>(
+      args?: Subset<T, CharactersCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CharactersCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Characters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CharactersAggregateArgs>(args: Subset<T, CharactersAggregateArgs>): Prisma.PrismaPromise<GetCharactersAggregateType<T>>
+
+    /**
+     * Group by Characters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharactersGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CharactersGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CharactersGroupByArgs['orderBy'] }
+        : { orderBy?: CharactersGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CharactersGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCharactersGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Characters model
+   */
+  readonly fields: CharactersFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Characters.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CharactersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Characters model
+   */
+  interface CharactersFieldRefs {
+    readonly id: FieldRef<"Characters", 'String'>
+    readonly name: FieldRef<"Characters", 'String'>
+    readonly xrange: FieldRef<"Characters", 'Int[]'>
+    readonly yrange: FieldRef<"Characters", 'Int[]'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Characters findUnique
+   */
+  export type CharactersFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * Filter, which Characters to fetch.
+     */
+    where: CharactersWhereUniqueInput
+  }
+
+  /**
+   * Characters findUniqueOrThrow
+   */
+  export type CharactersFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * Filter, which Characters to fetch.
+     */
+    where: CharactersWhereUniqueInput
+  }
+
+  /**
+   * Characters findFirst
+   */
+  export type CharactersFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * Filter, which Characters to fetch.
+     */
+    where?: CharactersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Characters to fetch.
+     */
+    orderBy?: CharactersOrderByWithRelationInput | CharactersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Characters.
+     */
+    cursor?: CharactersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Characters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Characters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Characters.
+     */
+    distinct?: CharactersScalarFieldEnum | CharactersScalarFieldEnum[]
+  }
+
+  /**
+   * Characters findFirstOrThrow
+   */
+  export type CharactersFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * Filter, which Characters to fetch.
+     */
+    where?: CharactersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Characters to fetch.
+     */
+    orderBy?: CharactersOrderByWithRelationInput | CharactersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Characters.
+     */
+    cursor?: CharactersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Characters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Characters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Characters.
+     */
+    distinct?: CharactersScalarFieldEnum | CharactersScalarFieldEnum[]
+  }
+
+  /**
+   * Characters findMany
+   */
+  export type CharactersFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * Filter, which Characters to fetch.
+     */
+    where?: CharactersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Characters to fetch.
+     */
+    orderBy?: CharactersOrderByWithRelationInput | CharactersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Characters.
+     */
+    cursor?: CharactersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Characters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Characters.
+     */
+    skip?: number
+    distinct?: CharactersScalarFieldEnum | CharactersScalarFieldEnum[]
+  }
+
+  /**
+   * Characters create
+   */
+  export type CharactersCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Characters.
+     */
+    data: XOR<CharactersCreateInput, CharactersUncheckedCreateInput>
+  }
+
+  /**
+   * Characters createMany
+   */
+  export type CharactersCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Characters.
+     */
+    data: CharactersCreateManyInput | CharactersCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Characters createManyAndReturn
+   */
+  export type CharactersCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * The data used to create many Characters.
+     */
+    data: CharactersCreateManyInput | CharactersCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Characters update
+   */
+  export type CharactersUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Characters.
+     */
+    data: XOR<CharactersUpdateInput, CharactersUncheckedUpdateInput>
+    /**
+     * Choose, which Characters to update.
+     */
+    where: CharactersWhereUniqueInput
+  }
+
+  /**
+   * Characters updateMany
+   */
+  export type CharactersUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Characters.
+     */
+    data: XOR<CharactersUpdateManyMutationInput, CharactersUncheckedUpdateManyInput>
+    /**
+     * Filter which Characters to update
+     */
+    where?: CharactersWhereInput
+    /**
+     * Limit how many Characters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Characters updateManyAndReturn
+   */
+  export type CharactersUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * The data used to update Characters.
+     */
+    data: XOR<CharactersUpdateManyMutationInput, CharactersUncheckedUpdateManyInput>
+    /**
+     * Filter which Characters to update
+     */
+    where?: CharactersWhereInput
+    /**
+     * Limit how many Characters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Characters upsert
+   */
+  export type CharactersUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Characters to update in case it exists.
+     */
+    where: CharactersWhereUniqueInput
+    /**
+     * In case the Characters found by the `where` argument doesn't exist, create a new Characters with this data.
+     */
+    create: XOR<CharactersCreateInput, CharactersUncheckedCreateInput>
+    /**
+     * In case the Characters was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CharactersUpdateInput, CharactersUncheckedUpdateInput>
+  }
+
+  /**
+   * Characters delete
+   */
+  export type CharactersDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+    /**
+     * Filter which Characters to delete.
+     */
+    where: CharactersWhereUniqueInput
+  }
+
+  /**
+   * Characters deleteMany
+   */
+  export type CharactersDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Characters to delete
+     */
+    where?: CharactersWhereInput
+    /**
+     * Limit how many Characters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Characters without action
+   */
+  export type CharactersDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Characters
+     */
+    select?: CharactersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Characters
+     */
+    omit?: CharactersOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -1921,6 +3024,16 @@ export namespace Prisma {
   };
 
   export type RankingScalarFieldEnum = (typeof RankingScalarFieldEnum)[keyof typeof RankingScalarFieldEnum]
+
+
+  export const CharactersScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    xrange: 'xrange',
+    yrange: 'yrange'
+  };
+
+  export type CharactersScalarFieldEnum = (typeof CharactersScalarFieldEnum)[keyof typeof CharactersScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -2065,6 +3178,55 @@ export namespace Prisma {
     scenario?: StringNullableWithAggregatesFilter<"Ranking"> | string | null
   }
 
+  export type CharactersWhereInput = {
+    AND?: CharactersWhereInput | CharactersWhereInput[]
+    OR?: CharactersWhereInput[]
+    NOT?: CharactersWhereInput | CharactersWhereInput[]
+    id?: UuidFilter<"Characters"> | string
+    name?: StringFilter<"Characters"> | string
+    xrange?: IntNullableListFilter<"Characters">
+    yrange?: IntNullableListFilter<"Characters">
+  }
+
+  export type CharactersOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    xrange?: SortOrder
+    yrange?: SortOrder
+  }
+
+  export type CharactersWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: CharactersWhereInput | CharactersWhereInput[]
+    OR?: CharactersWhereInput[]
+    NOT?: CharactersWhereInput | CharactersWhereInput[]
+    xrange?: IntNullableListFilter<"Characters">
+    yrange?: IntNullableListFilter<"Characters">
+  }, "id" | "name">
+
+  export type CharactersOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    xrange?: SortOrder
+    yrange?: SortOrder
+    _count?: CharactersCountOrderByAggregateInput
+    _avg?: CharactersAvgOrderByAggregateInput
+    _max?: CharactersMaxOrderByAggregateInput
+    _min?: CharactersMinOrderByAggregateInput
+    _sum?: CharactersSumOrderByAggregateInput
+  }
+
+  export type CharactersScalarWhereWithAggregatesInput = {
+    AND?: CharactersScalarWhereWithAggregatesInput | CharactersScalarWhereWithAggregatesInput[]
+    OR?: CharactersScalarWhereWithAggregatesInput[]
+    NOT?: CharactersScalarWhereWithAggregatesInput | CharactersScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Characters"> | string
+    name?: StringWithAggregatesFilter<"Characters"> | string
+    xrange?: IntNullableListFilter<"Characters">
+    yrange?: IntNullableListFilter<"Characters">
+  }
+
   export type RankingCreateInput = {
     id?: string
     name: string
@@ -2119,6 +3281,55 @@ export namespace Prisma {
     time?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     scenario?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CharactersCreateInput = {
+    id?: string
+    name: string
+    xrange?: CharactersCreatexrangeInput | number[]
+    yrange?: CharactersCreateyrangeInput | number[]
+  }
+
+  export type CharactersUncheckedCreateInput = {
+    id?: string
+    name: string
+    xrange?: CharactersCreatexrangeInput | number[]
+    yrange?: CharactersCreateyrangeInput | number[]
+  }
+
+  export type CharactersUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    xrange?: CharactersUpdatexrangeInput | number[]
+    yrange?: CharactersUpdateyrangeInput | number[]
+  }
+
+  export type CharactersUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    xrange?: CharactersUpdatexrangeInput | number[]
+    yrange?: CharactersUpdateyrangeInput | number[]
+  }
+
+  export type CharactersCreateManyInput = {
+    id?: string
+    name: string
+    xrange?: CharactersCreatexrangeInput | number[]
+    yrange?: CharactersCreateyrangeInput | number[]
+  }
+
+  export type CharactersUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    xrange?: CharactersUpdatexrangeInput | number[]
+    yrange?: CharactersUpdateyrangeInput | number[]
+  }
+
+  export type CharactersUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    xrange?: CharactersUpdatexrangeInput | number[]
+    yrange?: CharactersUpdateyrangeInput | number[]
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -2303,6 +3514,41 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type IntNullableListFilter<$PrismaModel = never> = {
+    equals?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    has?: number | IntFieldRefInput<$PrismaModel> | null
+    hasEvery?: number[] | ListIntFieldRefInput<$PrismaModel>
+    hasSome?: number[] | ListIntFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type CharactersCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    xrange?: SortOrder
+    yrange?: SortOrder
+  }
+
+  export type CharactersAvgOrderByAggregateInput = {
+    xrange?: SortOrder
+    yrange?: SortOrder
+  }
+
+  export type CharactersMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type CharactersMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type CharactersSumOrderByAggregateInput = {
+    xrange?: SortOrder
+    yrange?: SortOrder
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -2321,6 +3567,24 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type CharactersCreatexrangeInput = {
+    set: number[]
+  }
+
+  export type CharactersCreateyrangeInput = {
+    set: number[]
+  }
+
+  export type CharactersUpdatexrangeInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type CharactersUpdateyrangeInput = {
+    set?: number[]
+    push?: number | number[]
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {

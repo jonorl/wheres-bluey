@@ -8,6 +8,12 @@ mainRouter.get("/api/v1/ranking/:scenario?", async (req, res) => {
   res.json({ ranking });
 });
 
+// Get the coordinates for the characters
+mainRouter.get("/api/v1/characters/", async (req, res) => {
+  const coordinates = await db.retrieveCharacters();
+  res.json({ coordinates });
+});
+
 // Add new entry to ranking table
 mainRouter.post("/api/v1/ranking/:scenario?", async (req, res) => {
   const name = req.body.name;
