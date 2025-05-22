@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './imageSelector.css';
 import socksImage from './assets/bluey-room-socks.jpg';
 import muffinImage from './assets/bluey-room-muffin.jpg';
@@ -119,9 +119,21 @@ function ImageSelector({ imageUrl }) {
     setPlayerName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await fetch(`http://localhost:3000/api/v1/ranking/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: playerName,
+        time: timeElapsed,
+      })
+    })
     console.log(`Submitting name: ${playerName}, Time: ${timeElapsed} seconds`);
+    const ranking = await fetch(`http://localhost:3000/api/v1/ranking/`);
+    console.log("ranking", ranking)
     setShowModal(false);
     setPlayerName('');
   };
@@ -226,6 +238,7 @@ function ImageSelector({ imageUrl }) {
                 Enter your name:&nbsp;
                 <input
                   type="text"
+                  name="name"
                   value={playerName}
                   onChange={handleNameChange}
                   placeholder="Your name"

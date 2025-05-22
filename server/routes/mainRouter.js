@@ -9,7 +9,7 @@ mainRouter.get("/api/v1/ranking/:scenario?", async (req, res) => {
 });
 
 // Add new entry to ranking table
-mainRouter.put("/api/v1/ranking/:scenario?", async (req, res) => {
+mainRouter.post("/api/v1/ranking/:scenario?", async (req, res) => {
   const name = req.body.name;
   const time = req.body.time;
   const scenario = req.params.scenario;

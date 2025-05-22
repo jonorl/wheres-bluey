@@ -8,7 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Ranking {
   id         String   @id @default(uuid()) @db.Uuid
   name       String
