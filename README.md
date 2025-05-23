@@ -4,16 +4,14 @@ This project is a full-stack web app built with React, Node.js, Express, and Pri
 
 ## Features
 
-- **Interactive Gameplay**: Click on the image to find Socks, Muffin, and Bob Bilby, with a dropdown menu to select your guess.
+- **Interactive Gameplay**: Click on the image to find three characters, with a dropdown menu to select your guess.
 - **Timed Challenge**: Track your time from start to finish, with durations accurately recorded on the backend.
 - **Leaderboard**: Submit your name and time to see how you rank against other players.
-- **Responsive Design**: Play on desktop or mobile with a clean, Bluey-themed UI.
 - **Backend-Driven**: Character coordinates and game timing are managed via a robust Express API with a PostgreSQL database.
-- **Error Handling**: Graceful handling of network issues or invalid data, with user-friendly modals.
 
 ## Tech Stack
 
-- **Frontend**: React, vanilla CSS 
+- **Frontend**: React, React router, vanilla CSS 
 - **Backend**: Node.js, Express
 - **Database**: PostgreSQL with Prisma ORM
 - **APIs**: RESTful endpoints for character coordinates, game start, and leaderboard rankings
@@ -57,12 +55,12 @@ Before you start, ensure you have:
      The server runs on `http://localhost:3000` by default.
 
 3. **Set Up the Frontend**:
-   - Navigate to the frontend directory (e.g., `/frontend`):
+   - Navigate to the frontend directory (e.g., `/client`):
      ```bash
      cd frontend
      npm install
      ```
-   - Update API URLs in `frontend/src/ImageSelector.jsx` if your backend is hosted elsewhere:
+   - Update API URLs in `frontend/src/playroom.jsx` if your backend is hosted elsewhere:
      ```javascript
      const response = await fetch('https://your-backend-url/api/v1/characters/');
      ```
@@ -94,12 +92,12 @@ Before you start, ensure you have:
    - Click the "Start Game" button to begin. This triggers a backend API call to record the start time.
 
 2. **Find the Characters**:
-   - Click on the image to open a dropdown menu.
-   - Select a character (Socks, Muffin, or Bob Bilby) to check if they’re in that spot.
+   - Left click on the image to open a dropdown menu.
+   - Select a character to check if they’re in that spot.
    - Green checkmarks (✅) indicate a correct find; red crosses (🚫) mean try again!
 
 3. **Complete the Game**:
-   - Find all three characters to finish the game.
+   - Find all three characters to finish the game. The end time will be recorded on the backend and the total time will be calculated.
    - Enter your name in the congratulatory modal to submit your score.
 
 4. **View the Leaderboard**:
@@ -117,7 +115,7 @@ Before you start, ensure you have:
 
 ```
 bluey-hide-and-seek/
-├── backend/
+├── server/
 │   ├── prisma/
 │   │   └── schema.prisma       # Database schema
 │   ├── src/
@@ -125,12 +123,16 @@ bluey-hide-and-seek/
 │   │   │   └── mainRouter.js   # API routes
 │   │   ├── db/
 │   │   │   └── queries.js      # Database queries
+│   ├── app.js                  # Main application
 │   └── package.json
-├── frontend/
+├── client/
 │   ├── src/
 │   │   ├── assets/             # Images (Bluey scene, character icons)
-│   │   ├── ImageSelector.jsx   # Main game component
-│   │   └── imageSelector.css   # Custom styles
+│   │   ├── Routes.jsx          # React Router
+│   │   ├── Index.jsx           # Index/landing page
+│   │   ├── index.css           # Index style
+│   │   ├── Playroom.jsx        # Game scenario
+│   │   └── scenario.css        # Custom styles
 │   └── package.json
 └── README.md
 ```
