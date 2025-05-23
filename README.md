@@ -17,14 +17,14 @@ This project is a full-stack web app built with React, Node.js, Express, and Pri
 - **Backend**: Node.js, Express
 - **Database**: PostgreSQL with Prisma ORM
 - **APIs**: RESTful endpoints for character coordinates, game start, and leaderboard rankings
-- **Deployment**: Netlify for frontend client, Neon for db, Render for backend server.
+- **Deployment**: [Netlify](https://www.netlify.com/) for frontend client, [Neon](https://neon.tech/) for db, [Render](https://render.com/) for backend server.
 
 ## Prerequisites
 
 Before you start, ensure you have:
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
 - [PostgreSQL](https://www.postgresql.org/) installed locally or a hosted instance
 - A code editor like [VS Code](https://code.visualstudio.com/)
 
@@ -75,16 +75,16 @@ Before you start, ensure you have:
 4. **Seed the Database** (Optional):
    - Populate the `Characters` table with initial data:
      ```sql
-    INSERT INTO "Characters" (id, name, xrange, yrange) VALUES
-    (gen_random_uuid(), 'Lucky', '{28,30}', '{30,37}'),
-    (gen_random_uuid(), 'Judo', '{59,65}', '{45,58}'),
-    (gen_random_uuid(), 'Bluey', '{88,92}', '{24,29}'),
-    (gen_random_uuid(), 'Muffin', '{35,41}', '{74,81}'),
-    (gen_random_uuid(), 'Lucky''s dad', '{90,94}', '{23,31}'),
-    (gen_random_uuid(), 'Bob Bilby', '{36,39}', '{12,17}'),
-    (gen_random_uuid(), 'Bingo', '{29,32}', '{15,19}'),
-    (gen_random_uuid(), 'Socks', '{65,69}', '{40,51}'),
-    (gen_random_uuid(), 'Pelican', '{39,44}', '{17,24}')
+     INSERT INTO "Characters" (id, name, xrange, yrange) VALUES
+     (gen_random_uuid(), 'Lucky', '{28,30}', '{30,37}'),
+     (gen_random_uuid(), 'Judo', '{59,65}', '{45,58}'),
+     (gen_random_uuid(), 'Bluey', '{88,92}', '{24,29}'),
+     (gen_random_uuid(), 'Muffin', '{35,41}', '{74,81}'),
+     (gen_random_uuid(), 'Lucky''s dad', '{90,94}', '{23,31}'),
+     (gen_random_uuid(), 'Bob Bilby', '{36,39}', '{12,17}'),
+     (gen_random_uuid(), 'Bingo', '{29,32}', '{15,19}'),
+     (gen_random_uuid(), 'Socks', '{65,69}', '{40,51}'),
+     (gen_random_uuid(), 'Pelican', '{39,44}', '{17,24}')
      ```
 
 ## Usage
