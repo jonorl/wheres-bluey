@@ -1,25 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import Index from "./Index";
-import Playroom from "./Playroom";
-import Beach from "./Beach";
-import Street from "./Street";
+import SceneWrapper from "./Scene"
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
   },
-  {
-    path: "/scene/playroom",
-    element: <Playroom sceneName="playroom"/>,
-  },
-  {
-    path: "/scene/beach",
-    element: <Beach sceneName="beach"/>,
-  },
-  {
-    path: "/scene/street",
-    element: <Street sceneName="street"/>,
+    {
+    path: "/scene/:sceneName",
+    element: <SceneWrapper />,
   },
   {
     path: "*",
