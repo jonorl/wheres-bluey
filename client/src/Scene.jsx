@@ -304,7 +304,7 @@ function Scene() {
                             } as fast as you can!
                         </p>
                         <button onClick={handleStartGame}>Start Game</button>
-                        <p className="warning">This site is designed for desktop viewports</p>
+                        <p className="warning">This site is designed for desktop screens</p>
                     </div>
                 </div>
             ) : (
