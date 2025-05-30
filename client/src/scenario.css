@@ -4,12 +4,11 @@ html, body {
 
 body {
   background-color: #88caf2;
-  /* position: relative; */
   display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center;   /* Centers vertically */
-  min-height: 100vh; /* Use min-height to ensure it takes full viewport height */
-  margin: 0; /* Remove default body margin */
+  justify-content: center; 
+  align-items: center;   
+  min-height: 100vh; 
+  margin: 0; 
 }
 
 .image-container {

@@ -22,7 +22,7 @@ body.index-body {
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  width: 100%; /* Ensure full viewport width */
+  width: 100%; 
 }
 
 .header::before {
@@ -37,8 +37,8 @@ body.index-body {
 }
 
 .header-content {
-  max-width: 1200px; /* Match main-content width */
-  margin: 0 auto; /* Center the content */
+  max-width: 1200px; 
+  margin: 0 auto; 
   padding: 0 20px;
   text-align: center;
   position: relative;

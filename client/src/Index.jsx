@@ -1,5 +1,10 @@
+// React import
 import { Link } from 'react-router-dom';
+
+// CSS import
 import './index.css';
+
+// Assets import
 import roomImage from './assets/bluey-room-1440p.jpg';
 import beachImage from './assets/bluey-beach-1440p.jpg';
 import streetImage from './assets/bluey-street.jpg';

@@ -1,6 +1,11 @@
+// Express set-up
 const { Router } = require('express');
 const mainRouter = Router();
+
+// Import database queries
 const db = require('../db/queries');
+
+// GET ROUTES
 
 // Get all character coordinates
 mainRouter.get('/api/v1/characters/', async (req, res) => {
@@ -12,6 +17,19 @@ mainRouter.get('/api/v1/characters/', async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve characters' });
   }
 });
+
+// Get the full ranking table for the scenario
+mainRouter.get('/api/v1/ranking/:scene', async (req, res) => {
+  try {
+    const ranking = await db.retrieveEntries(req.params.scene);
+    res.json({ ranking });
+  } catch (error) {
+    console.error('Error retrieving rankings:', error);
+    res.status(500).json({ error: 'Failed to retrieve rankings' });
+  }
+});
+
+// POST ROUTES
 
 // Start a new game
 mainRouter.post('/api/v1/ranking/start/:scene', async (req, res) => {
@@ -47,15 +65,8 @@ mainRouter.post('/api/v1/ranking/', async (req, res) => {
   }
 });
 
-// Get the full ranking table for the scenario
-mainRouter.get('/api/v1/ranking/:scene', async (req, res) => {
-  try {
-    const ranking = await db.retrieveEntries(req.params.scene);
-    res.json({ ranking });
-  } catch (error) {
-    console.error('Error retrieving rankings:', error);
-    res.status(500).json({ error: 'Failed to retrieve rankings' });
-  }
-});
+// PUT ROUTES
+
+// DELETE ROUTES
 
 module.exports = mainRouter;

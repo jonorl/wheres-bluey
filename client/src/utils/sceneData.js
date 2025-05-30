@@ -1,4 +1,4 @@
-// sceneData.js
+// If more scenarios are to be added, this is the place to add the assets and names
 import socksImage from '../assets/bluey-room-socks.jpg';
 import muffinImage from '../assets/bluey-room-muffin.jpg';
 import bobBilbyImage from '../assets/bluey-room-bob-bilby.jpg';

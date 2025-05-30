@@ -1,13 +1,29 @@
+// React import
+
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import sceneData from './utils/sceneData';
+
+// CSS import
 import './scenario.css';
 
+// Data helper import
+import sceneData from './utils/sceneData';
+
+// Helper function to format time
+const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
+// Hostname (can be also added to a .env file)
+const host = "https://wheres-bluey.onrender.com/"
+
 function Scene() {
+
+    // Hooks
     const { sceneName } = useParams();
-    const navigate = useNavigate();
     const { background, characters: characterImages } = sceneData[sceneName] || {};
-    const imageUrl = background;
     const [clickedCoords, setClickedCoords] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [foundCount, setFoundCount] = useState(0);
@@ -26,19 +42,17 @@ function Scene() {
     const imageRef = useRef(null);
     const timerRef = useRef(null);
 
-    const [foundCharacters, setFoundCharacters] = useState(() => {
-        const safeCharacters = characterImages || {};
-        return Object.keys(safeCharacters).reduce((acc, name) => {
-            acc[name] = false;
-            return acc;
-        }, {});
-    });
+    // load background
+    const imageUrl = background;
+
+    // to redirect
+    const navigate = useNavigate();
 
     // Fetch characters for the specific scene on mount
     useEffect(() => {
         const fetchCharacters = async () => {
             try {
-                const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/characters?scene=${sceneName}`);
+                const response = await fetch(`${host}api/v1/characters?scene=${sceneName}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch characters: ${response.status}`);
                 }
@@ -78,7 +92,7 @@ function Scene() {
         fetchCharacters();
     }, [sceneName]);
 
-    // Start game timer
+    // Start game timer - just for show, there's a different logic for recording it
     useEffect(() => {
         if (gameStarted) {
             timerRef.current = setInterval(() => {
@@ -106,10 +120,37 @@ function Scene() {
         }
     }, [feedback]);
 
+    // This hides the dropdown menu when clicked outside of it
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                imageRef.current &&
+                !imageRef.current.contains(event.target)
+            ) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const [foundCharacters, setFoundCharacters] = useState(() => {
+        const safeCharacters = characterImages || {};
+        return Object.keys(safeCharacters).reduce((acc, name) => {
+            acc[name] = false;
+            return acc;
+        }, {});
+    });
+
     const handleStartGame = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/start/${sceneName}`, {
+            const response = await fetch(`${host}api/v1/ranking/start/${sceneName}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -192,7 +233,7 @@ function Scene() {
 
         try {
             setIsLoading(true);
-            const submitResponse = await fetch('https://wheres-bluey.onrender.com/api/v1/ranking/', {
+            const submitResponse = await fetch(`${host}api/v1/ranking/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -210,7 +251,7 @@ function Scene() {
             const submitData = await submitResponse.json();
             setTimeElapsed(submitData.ranking.time);
 
-            const rankingResponse = await fetch(`https://wheres-bluey.onrender.com/api/v1/ranking/${sceneName}`);
+            const rankingResponse = await fetch(`${host}api/v1/ranking/${sceneName}`);
             if (!rankingResponse.ok) {
                 throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
             }
@@ -236,30 +277,6 @@ function Scene() {
         setGameStarted(false);
         setRankingId('');
         navigate('/'); // Redirect to Index
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target) &&
-                imageRef.current &&
-                !imageRef.current.contains(event.target)
-            ) {
-                setShowDropdown(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
     return (
