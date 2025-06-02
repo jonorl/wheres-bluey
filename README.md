@@ -140,3 +140,5 @@ bluey-hide-and-seek/
 ## Live demo
 
 https://wheres-bluey.netlify.app/
+
+![App Screenshot](https://res.cloudinary.com/dqqdfeuo1/image/upload/v1748854149/d890b4e9-6283-4e6f-b62b-be32127ce1e4.png "Screenshot of Where's Bluey")
