@@ -1,17 +1,18 @@
 // Config
-
-require('dotenv').config();
+import "dotenv/config";
 
 // Express setup
-const express = require("express");
-const app = express();
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+
+import mainRouter from "./routes/mainRouter";
+
+const app = express()
 
 app.use(cors());
 app.use(express.json());
 
 // Router triggering
-const mainRouter = require("./routes/mainRouter");
 app.use("/", mainRouter);
 
 // Launch and port confirmation

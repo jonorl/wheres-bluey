@@ -1,4 +1,4 @@
-const { PrismaClient } = require("../generated/prisma/client");
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function retrieveCharacters() {
@@ -34,16 +34,16 @@ async function startGame(scenario) {
   return { id: result.id, date: result.date };
 }
 
-async function updateEntry(id, name) {
-  const dateEnd = new Date();
+async function updateEntry(id:number, name:string) {
+  const dateEnd: Date = new Date();
   const existingEntry = await prisma.ranking.findUnique({
     where: { id },
   });
   if (!existingEntry) {
     throw new Error("Ranking entry not found");
   }
-  const time = Math.floor((dateEnd - new Date(existingEntry.date)) / 1000);
-  const result = await prisma.ranking.update({
+  const existingDate = new Date(existingEntry.date);
+  const time = Math.floor((dateEnd.getTime() - existingDate.getTime()) / 1000);  const result = await prisma.ranking.update({
     where: { id },
     data: {
       name,
@@ -54,7 +54,7 @@ async function updateEntry(id, name) {
   return result;
 }
 
-module.exports = {
+export {
   retrieveCharacters,
   retrieveEntries,
   startGame,

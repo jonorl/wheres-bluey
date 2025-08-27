@@ -1,9 +1,24 @@
 // Express set-up
-const { Router } = require('express');
+import { Router, Request, Response } from 'express'
 const mainRouter = Router();
 
 // Import database queries
-const db = require('../db/queries');
+import * as db from '../db/queries'
+
+// Interfaces
+
+interface UpdateRankingRequest {
+  id: number;
+  name: string;
+}
+
+interface RankingResponse {
+  ranking: any; // Replace 'any' with your actual ranking type
+}
+
+interface ErrorResponse {
+  error: string;
+}
 
 // GET ROUTES
 
@@ -46,16 +61,17 @@ mainRouter.post('/api/v1/ranking/start/:scene', async (req, res) => {
 });
 
 // Update ranking entry with name and end time
-mainRouter.post('/api/v1/ranking/', async (req, res) => {
+mainRouter.post('/api/v1/ranking/', async (req: Request<{}, RankingResponse | ErrorResponse, UpdateRankingRequest>, res: Response<RankingResponse | ErrorResponse>) => {
   const { id, name } = req.body;
-
+  
   if (!id || typeof id !== 'string') {
     return res.status(400).json({ error: 'ID is required and must be a string' });
   }
+  
   if (!name || typeof name !== 'string' || name.trim() === '') {
     return res.status(400).json({ error: 'Name is required and must be a non-empty string' });
   }
-
+  
   try {
     const ranking = await db.updateEntry(id, name);
     res.json({ ranking });
@@ -69,4 +85,4 @@ mainRouter.post('/api/v1/ranking/', async (req, res) => {
 
 // DELETE ROUTES
 
-module.exports = mainRouter;
+export default mainRouter

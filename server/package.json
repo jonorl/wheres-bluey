@@ -4,8 +4,8 @@
   "description": "Where's Bluey project backend",
   "license": "ISC",
   "author": "jonorl@gmail.com",
-  "type": "commonjs",
-  "main": "app.js",
+  "type": "module",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,20 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "prisma": "^6.8.2"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.6",
+    "@types/connect": "^3.4.38",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/express-serve-static-core": "^5.0.7",
+    "@types/http-errors": "^2.0.5",
+    "@types/mime": "^3.0.4",
+    "@types/node": "^24.3.0",
+    "@types/qs": "^6.14.0",
+    "@types/range-parser": "^1.2.7",
+    "@types/send": "^0.17.5",
+    "@types/serve-static": "^1.15.8",
+    "typescript": "^5.9.2"
   }
 }

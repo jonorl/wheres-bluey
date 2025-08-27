@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "declaration": false,
+    "emitDeclarationOnly": false
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["dist", "node_modules", "**/*.d.ts"],
+  // "references": [{ "path": "./tsconfig.node.json" }]
+}
