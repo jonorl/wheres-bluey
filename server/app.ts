@@ -1,11 +1,11 @@
 // Config
-import "dotenv/config";
+import { config } from 'dotenv'
 
 // Express setup
 import express from "express";
 import cors from "cors";
 
-import mainRouter from "./routes/mainRouter";
+import mainRouter from "./routes/mainRouter.js";
 
 const app = express()
 

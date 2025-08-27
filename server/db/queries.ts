@@ -6,7 +6,7 @@ async function retrieveCharacters() {
   return result;
 }
 
-async function retrieveEntries(scene) {
+async function retrieveEntries(scene:string) {
   const result = await prisma.ranking.findMany({
     where: {
       scenario: scene || undefined,
@@ -22,7 +22,7 @@ async function retrieveEntries(scene) {
   return result;
 }
 
-async function startGame(scenario) {
+async function startGame(scenario:string) {
   const result = await prisma.ranking.create({
     data: {
       name: "",
@@ -34,7 +34,7 @@ async function startGame(scenario) {
   return { id: result.id, date: result.date };
 }
 
-async function updateEntry(id:number, name:string) {
+async function updateEntry(id:string, name:string) {
   const dateEnd: Date = new Date();
   const existingEntry = await prisma.ranking.findUnique({
     where: { id },

@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express'
 const mainRouter = Router();
 
 // Import database queries
-import * as db from '../db/queries'
+import * as db from '../db/queries.js'
 
 // Interfaces
 
