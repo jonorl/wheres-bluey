@@ -8,6 +8,7 @@ import "./scenario.css";
 
 // Data helper import
 import sceneData from "./utils/sceneData";
+import { EventData } from "node:test";
 
 // Helper function to format time
 const formatTime = (seconds: number) => {
@@ -38,6 +39,12 @@ function Scene() {
     yRange: Array<number>;
   }
 
+  interface Entry {
+    id: number,
+    name: string,
+    time: number,
+  }
+
   // Hooks
   const { sceneName } = useParams<SceneNameParams>();
   const { background, characters: characterImages } =
@@ -56,8 +63,8 @@ function Scene() {
   const [characterError, setCharacterError] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [rankingId, setRankingId] = useState("");
-  const dropdownRef = useRef(null);
-  const imageRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // load background
@@ -126,14 +133,14 @@ function Scene() {
       timerRef.current = setInterval(() => {
         setTimeElapsed((prev) => prev + 1);
       }, 1000);
-      return () => clearInterval(timerRef.current);
+      return () => clearInterval(timerRef.current!);
     }
   }, [gameStarted]);
 
   // Handle win condition
   useEffect(() => {
     if (foundCount === 3) {
-      clearInterval(timerRef.current);
+      clearInterval(timerRef.current!);
       setShowModal(true);
     }
   }, [foundCount]);
@@ -150,12 +157,12 @@ function Scene() {
 
   // This hides the dropdown menu when clicked outside of it
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
+        !dropdownRef.current.contains(event.target as Node) &&
         imageRef.current &&
-        !imageRef.current.contains(event.target)
+        !imageRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false);
       }
@@ -168,8 +175,8 @@ function Scene() {
   }, []);
 
   const [foundCharacters, setFoundCharacters] = useState(() => {
-    const safeCharacters = characterImages || {};
-    return Object.keys(safeCharacters).reduce((acc, name) => {
+    const safeCharacters = characterImages;
+    return Object.keys(safeCharacters).reduce((acc: Record<string, boolean>, name) => {
       acc[name] = false;
       return acc;
     }, {});
@@ -200,7 +207,7 @@ function Scene() {
     }
   };
 
-  const handleImageClick = (e) => {
+  const handleImageClick = (e:MouseEvent) => {
     if (!imageRef.current || showModal || characterError || !gameStarted)
       return;
 
@@ -257,17 +264,17 @@ function Scene() {
     setShowDropdown(false);
   };
 
-  const handleContextMenu = (e) => {
+  const handleContextMenu = (e:MouseEvent) => {
     e.preventDefault();
     if (showModal || characterError || !gameStarted) return;
     handleImageClick(e);
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setPlayerName(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:SubmitEvent) => {
     e.preventDefault();
 
     if (!playerName.trim()) {
@@ -483,7 +490,7 @@ function Scene() {
                       </thead>
                       <tbody>
                         {rankings.length > 0 ? (
-                          rankings.map((entry, index) => (
+                          rankings.map((entry:Entry, index) => (
                             <tr key={entry.id}>
                               <td>{index + 1}</td>
                               <td>{entry.name}</td>
@@ -492,7 +499,7 @@ function Scene() {
                           ))
                         ) : (
                           <tr>
-                            <td colSpan="3">No rankings available</td>
+                            <td colSpan={3}>No rankings available</td>
                           </tr>
                         )}
                       </tbody>
