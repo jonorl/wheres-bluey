@@ -1,6 +1,6 @@
 // React import
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 // CSS import
@@ -8,7 +8,6 @@ import "./scenario.css";
 
 // Data helper import
 import sceneData from "./utils/sceneData";
-import { EventData } from "node:test";
 
 // Helper function to format time
 const formatTime = (seconds: number) => {
@@ -40,16 +39,31 @@ function Scene() {
   }
 
   interface Entry {
-    id: number,
-    name: string,
-    time: number,
+    id: number;
+    name: string;
+    time: number;
+  }
+
+  interface ClickedCoords {
+    x: number;
+    y: number;
+    imageWidth: number;
+    imageHeight: number;
+  }
+
+  interface Feedback {
+    type: string;
+    x: number;
+    y: number;
   }
 
   // Hooks
   const { sceneName } = useParams<SceneNameParams>();
   const { background, characters: characterImages } =
     sceneData[sceneName!] || {};
-  const [clickedCoords, setClickedCoords] = useState(null);
+  const [clickedCoords, setClickedCoords] = useState<ClickedCoords | null>(
+    null
+  );
   const [showDropdown, setShowDropdown] = useState(false);
   const [foundCount, setFoundCount] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -58,13 +72,13 @@ function Scene() {
   const [isLoading, setIsLoading] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [rankings, setRankings] = useState([]);
-  const [feedback, setFeedback] = useState(null);
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [characters, setCharacters] = useState([]);
   const [characterError, setCharacterError] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [rankingId, setRankingId] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // load background
@@ -176,10 +190,13 @@ function Scene() {
 
   const [foundCharacters, setFoundCharacters] = useState(() => {
     const safeCharacters = characterImages;
-    return Object.keys(safeCharacters).reduce((acc: Record<string, boolean>, name) => {
-      acc[name] = false;
-      return acc;
-    }, {});
+    return Object.keys(safeCharacters).reduce(
+      (acc: Record<string, boolean>, name) => {
+        acc[name] = false;
+        return acc;
+      },
+      {}
+    );
   });
 
   const handleStartGame = async () => {
@@ -207,7 +224,7 @@ function Scene() {
     }
   };
 
-  const handleImageClick = (e:MouseEvent) => {
+  const handleImageClick = (e: React.MouseEvent) => {
     if (!imageRef.current || showModal || characterError || !gameStarted)
       return;
 
@@ -264,17 +281,17 @@ function Scene() {
     setShowDropdown(false);
   };
 
-  const handleContextMenu = (e:MouseEvent) => {
+  const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     if (showModal || characterError || !gameStarted) return;
     handleImageClick(e);
   };
 
-  const handleNameChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlayerName(e.target.value);
   };
 
-  const handleSubmit = async (e:SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!playerName.trim()) {
@@ -311,7 +328,7 @@ function Scene() {
       setShowModal(false);
       setShowLeaderboardModal(true);
       setPlayerName("");
-    } catch (error:unknown) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       setShowModal(false);
     } finally {
@@ -490,7 +507,7 @@ function Scene() {
                       </thead>
                       <tbody>
                         {rankings.length > 0 ? (
-                          rankings.map((entry:Entry, index) => (
+                          rankings.map((entry: Entry, index) => (
                             <tr key={entry.id}>
                               <td>{index + 1}</td>
                               <td>{entry.name}</td>
