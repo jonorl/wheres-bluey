@@ -60,7 +60,7 @@ Before you start, ensure you have:
      cd frontend
      npm install
      ```
-   - Update API URLs in `frontend/src/playroom.tsx` if your backend is hosted elsewhere:
+   - Update API URLs in `client/src/Scene.tsx` if your backend is hosted elsewhere:
      ```javascript
      const response = await fetch('https://your-backend-url/api/v1/characters/');
      ```

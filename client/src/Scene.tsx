@@ -19,7 +19,7 @@ const formatTime = (seconds: number) => {
 };
 
 // Hostname (can be also added to a .env file)
-const host = "http://localhost:3000/";
+const host = "https://wheres-bluey.onrender.com/";
 
 function Scene() {
   interface SceneNameParams {
