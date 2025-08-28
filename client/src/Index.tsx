@@ -47,7 +47,7 @@ function Index() {
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
-          <p>&copy; Where's Bluey project 8hqczgwx8@mozmail.com</p>
+          <p>Where's Bluey project jonorl@gmail.com</p>
 
         </div>
       </footer>

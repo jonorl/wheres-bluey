@@ -19,7 +19,7 @@ const formatTime = (seconds: number) => {
 };
 
 // Hostname (can be also added to a .env file)
-const host = "https://wheres-bluey.onrender.com/";
+const host = "http://localhost:3000/";
 
 function Scene() {
   interface SceneNameParams {
@@ -80,6 +80,7 @@ function Scene() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [showSlowMessage, setShowSlowMessage] = useState(false);
 
   // load background
   const imageUrl = background;
@@ -187,6 +188,18 @@ function Scene() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        setShowSlowMessage(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowSlowMessage(false);
+    }
+  }, [isLoading]);
 
   const [foundCharacters, setFoundCharacters] = useState(() => {
     const safeCharacters = characterImages;
@@ -384,6 +397,12 @@ function Scene() {
                 <p>
                   {gameStarted ? "Loading leaderboard..." : "Starting game..."}
                 </p>
+                {showSlowMessage && (
+                  <p>
+                    Be patient, the whole thing is hosted in super slow free
+                    services
+                  </p>
+                )}
               </div>
             </div>
           )}
