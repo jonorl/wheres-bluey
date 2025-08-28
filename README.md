@@ -11,7 +11,7 @@ This project is a full-stack web app built with React, Node.js, Express, and Pri
 
 ## Tech Stack
 
-- **Frontend**: React, React router, vanilla CSS 
+- **Frontend**: React, React router, vanilla CSS and Typescript
 - **Backend**: Node.js, Express
 - **Database**: PostgreSQL with Prisma ORM
 - **APIs**: RESTful endpoints for character coordinates, game start, and leaderboard rankings
@@ -60,7 +60,7 @@ Before you start, ensure you have:
      cd frontend
      npm install
      ```
-   - Update API URLs in `frontend/src/playroom.jsx` if your backend is hosted elsewhere:
+   - Update API URLs in `frontend/src/playroom.tsx` if your backend is hosted elsewhere:
      ```javascript
      const response = await fetch('https://your-backend-url/api/v1/characters/');
      ```
@@ -116,22 +116,23 @@ Before you start, ensure you have:
 ```
 bluey-hide-and-seek/
 ├── server/
+    ├── dist/                  # JS compiled code
 │   ├── prisma/
 │   │   └── schema.prisma       # Database schema
 │   ├── src/
 │   │   ├── routes/
-│   │   │   └── mainRouter.js   # API routes
+│   │   │   └── mainRouter.ts   # API routes
 │   │   ├── db/
-│   │   │   └── queries.js      # Database queries
-│   ├── app.js                  # Main application
+│   │   │   └── queries.ts      # Database queries
+│   ├── app.ts                  # Main application
 │   └── package.json
 ├── client/
 │   ├── src/
 │   │   ├── assets/             # Images (Bluey scene, character icons)
-│   │   ├── Routes.jsx          # React Router
-│   │   ├── Index.jsx           # Index/landing page
+│   │   ├── Routes.tsx          # React Router
+│   │   ├── Index.tsx           # Index/landing page
 │   │   ├── index.css           # Index style
-│   │   ├── Playroom.jsx        # Game scenario
+│   │   ├── Playroom.tsx        # Game scenario
 │   │   └── scenario.css        # Custom styles
 │   └── package.json
 └── README.md
