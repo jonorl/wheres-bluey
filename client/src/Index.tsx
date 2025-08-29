@@ -1,13 +1,11 @@
-// React import
-import { Link } from 'react-router-dom';
-
-// CSS import
-import './index.css';
+import { Link } from "react-router-dom";
+import "./index.css";
+import { FaGithub } from "react-icons/fa";
 
 // Assets import
-import roomImage from './assets/bluey-room-1440p.jpg';
-import beachImage from './assets/bluey-beach-1440p.jpg';
-import streetImage from './assets/bluey-street.jpg';
+import roomImage from "./assets/bluey-room-1440p.jpg";
+import beachImage from "./assets/bluey-beach-1440p.jpg";
+import streetImage from "./assets/bluey-street.jpg";
 
 function Index() {
   return (
@@ -47,8 +45,17 @@ function Index() {
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
-          <p>Where's Bluey project jonorl@gmail.com</p>
-
+          <p>
+            Where's Bluey project jonorl@gmail.com
+            <a
+              href="https://github.com/jonorl/wheres-bluey/tree/ts-conversion"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center align-middle ml-2 hover:text-white/80"
+            >
+              <FaGithub className="mb-1" aria-label="GitHub" />
+            </a>
+          </p>
         </div>
       </footer>
     </>

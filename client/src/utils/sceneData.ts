@@ -23,14 +23,14 @@ interface SceneData {
   };
 }
 
-const sceneData: SceneData = {
+const sceneData = {
   playroom: {
     background: blueyRoom,
     characters: {
       Socks: socksImage,
       Muffin: muffinImage,
       "Bob Bilby": bobBilbyImage,
-    },
+    } as const,
   },
   beach: {
     background: blueyBeach,
@@ -38,7 +38,7 @@ const sceneData: SceneData = {
       Bingo: bingoImage,
       Bluey: blueyImage,
       Pelican: pelicanImage,
-    },
+    } as const,
   },
   street: {
     background: blueyStreet,
@@ -46,8 +46,8 @@ const sceneData: SceneData = {
       Judo: judoImage,
       Lucky: luckyImage,
       "Lucky's dad": luckysDadImage,
-    },
+    } as const,
   },
-};
+} as const;
 
 export default sceneData;

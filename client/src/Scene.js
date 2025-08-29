@@ -1,11 +1,15 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-// React import
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-// CSS import
 import "./scenario.css";
+import HOST from "./config";
 // Data helper import
 import sceneData from "./utils/sceneData";
+var FeedbackType;
+(function (FeedbackType) {
+    FeedbackType["CORRECT"] = "correct";
+    FeedbackType["INCORRECT"] = "incorrect";
+})(FeedbackType || (FeedbackType = {}));
 // Helper function to format time
 const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -14,8 +18,6 @@ const formatTime = (seconds) => {
         .toString()
         .padStart(2, "0")}`;
 };
-// Hostname (can be also added to a .env file)
-const host = "http://localhost:3000/";
 function Scene() {
     // Hooks
     const { sceneName } = useParams();
@@ -38,6 +40,13 @@ function Scene() {
     const imageRef = useRef(null);
     const timerRef = useRef(null);
     const [showSlowMessage, setShowSlowMessage] = useState(false);
+    const [foundCharacters, setFoundCharacters] = useState(() => {
+        const safeCharacters = characterImages;
+        return Object.keys(safeCharacters).reduce((acc, name) => {
+            acc[name] = false;
+            return acc;
+        }, {});
+    });
     // load background
     const imageUrl = background;
     // to redirect
@@ -46,7 +55,7 @@ function Scene() {
     useEffect(() => {
         const fetchCharacters = async () => {
             try {
-                const response = await fetch(`${host}api/v1/characters?scene=${sceneName}`);
+                const response = await fetch(`${HOST}api/v1/characters?scene=${sceneName}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch characters: ${response.status}`);
                 }
@@ -67,8 +76,8 @@ function Scene() {
                     }
                     return {
                         name: char.name,
-                        xRange: char.xrange,
-                        yRange: char.yrange,
+                        xrange: char.xrange,
+                        yrange: char.yrange,
                     };
                 });
                 setCharacters(validatedCharacters);
@@ -131,17 +140,10 @@ function Scene() {
             setShowSlowMessage(false);
         }
     }, [isLoading]);
-    const [foundCharacters, setFoundCharacters] = useState(() => {
-        const safeCharacters = characterImages;
-        return Object.keys(safeCharacters).reduce((acc, name) => {
-            acc[name] = false;
-            return acc;
-        }, {});
-    });
     const handleStartGame = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${host}api/v1/ranking/start/${sceneName}`, {
+            const response = await fetch(`${HOST}api/v1/ranking/start/${sceneName}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -186,11 +188,11 @@ function Scene() {
             return;
         const clickXPercent = (clickX / imageWidth) * 100;
         const clickYPercent = (clickY / imageHeight) * 100;
-        if (clickXPercent >= charName.xRange[0] &&
-            clickXPercent <= charName.xRange[1] &&
-            clickYPercent >= charName.yRange[0] &&
-            clickYPercent <= charName.yRange[1]) {
-            setFeedback({ type: "correct", x: clickX, y: clickY });
+        if (clickXPercent >= charName.xrange[0] &&
+            clickXPercent <= charName.xrange[1] &&
+            clickYPercent >= charName.yrange[0] &&
+            clickYPercent <= charName.yrange[1]) {
+            setFeedback({ type: FeedbackType.CORRECT, x: clickX, y: clickY });
             if (!foundCharacters[char]) {
                 setFoundCharacters((prev) => ({
                     ...prev,
@@ -200,7 +202,7 @@ function Scene() {
             }
         }
         else {
-            setFeedback({ type: "incorrect", x: clickX, y: clickY });
+            setFeedback({ type: FeedbackType.INCORRECT, x: clickX, y: clickY });
         }
         setShowDropdown(false);
     };
@@ -220,7 +222,7 @@ function Scene() {
         }
         try {
             setIsLoading(true);
-            const submitResponse = await fetch(`${host}api/v1/ranking/`, {
+            const submitResponse = await fetch(`${HOST}api/v1/ranking/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -235,7 +237,7 @@ function Scene() {
             }
             const submitData = await submitResponse.json();
             setTimeElapsed(submitData.ranking.time);
-            const rankingResponse = await fetch(`${host}api/v1/ranking/${sceneName}`);
+            const rankingResponse = await fetch(`${HOST}api/v1/ranking/${sceneName}`);
             if (!rankingResponse.ok) {
                 throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
             }

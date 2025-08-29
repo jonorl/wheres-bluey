@@ -1,16 +1,63 @@
-// React import
-
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-// CSS import
 import "./scenario.css";
+import HOST from "./config";
 
 // Data helper import
 import sceneData from "./utils/sceneData";
 
+// Interfaces, enums and types
+interface SceneNameParams {
+  [key: string]: string;
+  sceneName: string;
+}
+
+interface Characters {
+  name: string;
+  xrange: readonly [number, number];
+  yrange: readonly [number, number];
+}
+
+interface Entry {
+  id: number;
+  name: string;
+  time: number;
+}
+
+interface ClickedCoords {
+  x: number;
+  y: number;
+  imageWidth: number;
+  imageHeight: number;
+}
+
+enum FeedbackType {
+  CORRECT = "correct",
+  INCORRECT = "incorrect",
+}
+
+interface Feedback {
+  type: FeedbackType;
+  x: number;
+  y: number;
+}
+
+type FoundCharacters = Record<string, boolean>;
+
+interface CharacterResponse {
+  coordinates: Characters[];
+}
+
+interface RankingStartResponse {
+  id: string;
+}
+
+interface LeaderboardResponse {
+  ranking: Entry[];
+}
+
 // Helper function to format time
-const formatTime = (seconds: number) => {
+const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${minutes.toString().padStart(2, "0")}:${secs
@@ -18,49 +65,12 @@ const formatTime = (seconds: number) => {
     .padStart(2, "0")}`;
 };
 
-// Hostname (can be also added to a .env file)
-const host = "https://wheres-bluey.onrender.com/";
 
 function Scene() {
-  interface SceneNameParams {
-    [key: string]: string;
-    sceneName: string;
-  }
-
-  interface Characters {
-    name: string;
-    xrange: number | Array<number>;
-    yrange: number | Array<number>;
-  }
-
-  interface CharName {
-    xRange: Array<number>;
-    yRange: Array<number>;
-  }
-
-  interface Entry {
-    id: number;
-    name: string;
-    time: number;
-  }
-
-  interface ClickedCoords {
-    x: number;
-    y: number;
-    imageWidth: number;
-    imageHeight: number;
-  }
-
-  interface Feedback {
-    type: string;
-    x: number;
-    y: number;
-  }
-
   // Hooks
   const { sceneName } = useParams<SceneNameParams>();
   const { background, characters: characterImages } =
-    sceneData[sceneName!] || {};
+    sceneData[sceneName as keyof typeof sceneData] || {};
   const [clickedCoords, setClickedCoords] = useState<ClickedCoords | null>(
     null
   );
@@ -71,9 +81,9 @@ function Scene() {
   const [showLeaderboardModal, setShowLeaderboardModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [playerName, setPlayerName] = useState("");
-  const [rankings, setRankings] = useState([]);
+  const [rankings, setRankings] = useState<Entry[]>([]);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const [characters, setCharacters] = useState([]);
+  const [characters, setCharacters] = useState<Characters[]>([]);
   const [characterError, setCharacterError] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [rankingId, setRankingId] = useState("");
@@ -81,6 +91,18 @@ function Scene() {
   const imageRef = useRef<HTMLImageElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [showSlowMessage, setShowSlowMessage] = useState(false);
+  const [foundCharacters, setFoundCharacters] = useState<FoundCharacters>(
+    () => {
+      const safeCharacters = characterImages;
+      return Object.keys(safeCharacters).reduce(
+        (acc: Record<string, boolean>, name) => {
+          acc[name] = false;
+          return acc;
+        },
+        {}
+      );
+    }
+  );
 
   // load background
   const imageUrl = background;
@@ -93,12 +115,12 @@ function Scene() {
     const fetchCharacters = async () => {
       try {
         const response = await fetch(
-          `${host}api/v1/characters?scene=${sceneName}`
+          `${HOST}api/v1/characters?scene=${sceneName}`
         );
         if (!response.ok) {
           throw new Error(`Failed to fetch characters: ${response.status}`);
         }
-        const data = await response.json();
+        const data: CharacterResponse = await response.json();
 
         if (!Array.isArray(data.coordinates)) {
           throw new Error("Invalid data format: coordinates must be an array");
@@ -125,8 +147,8 @@ function Scene() {
           }
           return {
             name: char.name,
-            xRange: char.xrange,
-            yRange: char.yrange,
+            xrange: char.xrange,
+            yrange: char.yrange,
           };
         });
 
@@ -201,21 +223,10 @@ function Scene() {
     }
   }, [isLoading]);
 
-  const [foundCharacters, setFoundCharacters] = useState(() => {
-    const safeCharacters = characterImages;
-    return Object.keys(safeCharacters).reduce(
-      (acc: Record<string, boolean>, name) => {
-        acc[name] = false;
-        return acc;
-      },
-      {}
-    );
-  });
-
-  const handleStartGame = async () => {
+  const handleStartGame = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${host}api/v1/ranking/start/${sceneName}`, {
+      const response = await fetch(`${HOST}api/v1/ranking/start/${sceneName}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -226,7 +237,7 @@ function Scene() {
         throw new Error(`Failed to start game: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data: RankingStartResponse = await response.json();
       setRankingId(data.id);
       setGameStarted(true);
     } catch (error: unknown) {
@@ -237,7 +248,7 @@ function Scene() {
     }
   };
 
-  const handleImageClick = (e: React.MouseEvent) => {
+  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     if (!imageRef.current || showModal || characterError || !gameStarted)
       return;
 
@@ -266,7 +277,7 @@ function Scene() {
       imageHeight: number;
     };
 
-    const charName: CharName = characters.find(
+    const charName = characters.find(
       (character: Characters) => character.name === char
     )!;
     if (!charName) return;
@@ -275,12 +286,12 @@ function Scene() {
     const clickYPercent: number = (clickY / imageHeight) * 100;
 
     if (
-      clickXPercent >= charName.xRange[0] &&
-      clickXPercent <= charName.xRange[1] &&
-      clickYPercent >= charName.yRange[0] &&
-      clickYPercent <= charName.yRange[1]
+      clickXPercent >= charName.xrange[0] &&
+      clickXPercent <= charName.xrange[1] &&
+      clickYPercent >= charName.yrange[0] &&
+      clickYPercent <= charName.yrange[1]
     ) {
-      setFeedback({ type: "correct", x: clickX, y: clickY });
+      setFeedback({ type: FeedbackType.CORRECT, x: clickX, y: clickY });
       if (!foundCharacters[char]) {
         setFoundCharacters((prev) => ({
           ...prev,
@@ -289,12 +300,12 @@ function Scene() {
         setFoundCount((prevCount) => prevCount + 1);
       }
     } else {
-      setFeedback({ type: "incorrect", x: clickX, y: clickY });
+      setFeedback({ type: FeedbackType.INCORRECT, x: clickX, y: clickY });
     }
     setShowDropdown(false);
   };
 
-  const handleContextMenu = (e: React.MouseEvent) => {
+  const handleContextMenu = (e: React.MouseEvent<HTMLImageElement>) => {
     e.preventDefault();
     if (showModal || characterError || !gameStarted) return;
     handleImageClick(e);
@@ -313,7 +324,7 @@ function Scene() {
 
     try {
       setIsLoading(true);
-      const submitResponse = await fetch(`${host}api/v1/ranking/`, {
+      const submitResponse = await fetch(`${HOST}api/v1/ranking/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -331,12 +342,12 @@ function Scene() {
       const submitData = await submitResponse.json();
       setTimeElapsed(submitData.ranking.time);
 
-      const rankingResponse = await fetch(`${host}api/v1/ranking/${sceneName}`);
+      const rankingResponse = await fetch(`${HOST}api/v1/ranking/${sceneName}`);
       if (!rankingResponse.ok) {
         throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
       }
 
-      const rankingData = await rankingResponse.json();
+      const rankingData: LeaderboardResponse = await rankingResponse.json();
       setRankings(rankingData.ranking);
       setShowModal(false);
       setShowLeaderboardModal(true);
