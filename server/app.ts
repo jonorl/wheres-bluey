@@ -1,11 +1,9 @@
-// Config
-import { config } from 'dotenv'
-
 // Express setup
 import express from "express";
 import cors from "cors";
 
 import mainRouter from "./routes/mainRouter.js";
+import config from "./config.js"
 
 const app = express()
 
@@ -16,6 +14,6 @@ app.use(express.json());
 app.use("/", mainRouter);
 
 // Launch and port confirmation
-app.listen(process.env.PORT, () =>
-  console.log(`Listeining on port ${process.env.PORT}`)
+app.listen(config.port, () =>
+  console.log(`Listeining on port ${config.port}`)
 );
