@@ -15,5 +15,4 @@
   },
   "include": ["**/*.ts"],
   "exclude": ["dist", "node_modules", "**/*.d.ts"],
-  // "references": [{ "path": "./tsconfig.node.json" }]
 }
