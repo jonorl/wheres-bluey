@@ -15,6 +15,6 @@ const mainRouter = require("./routes/mainRouter");
 app.use("/", mainRouter);
 
 // Launch and port confirmation
-app.listen(process.env.PORT, () =>
-  console.log(`Listeining on port ${process.env.PORT}`)
+app.listen(process.env.PORT_BLUEY, () =>
+  console.log(`Listeining on port ${process.env.PORT_BLUEY}`)
 );
