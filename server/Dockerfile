@@ -12,7 +12,7 @@ COPY . .
 RUN npx prisma generate
 
 ENV NODE_ENV=production
-EXPOSE 8082
+EXPOSE 8083
 
 USER node
 
