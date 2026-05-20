@@ -17,7 +17,7 @@ const formatTime = (seconds) => {
 };
 
 // Hostname (can be also added to a .env file)
-const host = "https://wheres-bluey.onrender.com/"
+const HOST = import.meta.env.VITE_HOST;
 
 function Scene() {
 
@@ -52,7 +52,7 @@ function Scene() {
     useEffect(() => {
         const fetchCharacters = async () => {
             try {
-                const response = await fetch(`${host}api/v1/characters?scene=${sceneName}`);
+                const response = await fetch(`${HOST}api/v1/characters?scene=${sceneName}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch characters: ${response.status}`);
                 }
@@ -150,7 +150,7 @@ function Scene() {
     const handleStartGame = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${host}api/v1/ranking/start/${sceneName}`, {
+            const response = await fetch(`${HOST}api/v1/ranking/start/${sceneName}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ function Scene() {
 
         try {
             setIsLoading(true);
-            const submitResponse = await fetch(`${host}api/v1/ranking/`, {
+            const submitResponse = await fetch(`${HOST}api/v1/ranking/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -251,7 +251,7 @@ function Scene() {
             const submitData = await submitResponse.json();
             setTimeElapsed(submitData.ranking.time);
 
-            const rankingResponse = await fetch(`${host}api/v1/ranking/${sceneName}`);
+            const rankingResponse = await fetch(`${HOST}api/v1/ranking/${sceneName}`);
             if (!rankingResponse.ok) {
                 throw new Error(`Failed to fetch rankings: ${rankingResponse.status}`);
             }
